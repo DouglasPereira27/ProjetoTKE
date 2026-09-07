@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TKE • PLANO 365 — Programa de Levantamento de Ações e Nivelamento Operacional</title>
+  <meta name="description" content="PLANO 365 — Programa de Levantamento de Ações e Nivelamento Operacional: Sistema especialista em análise de ordens de serviço, monitoramento de reincidências críticas (<30 dias), zoneamento físico e matriz de capacitação técnica da frota TKE.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="brand-wrapper">
+      <div class="tke-logo-box">
+        <span class="tke-brand-text">TKE</span>
+        <div class="tke-slogan">MOVE<br>BEYOND</div>
+      </div>
+      <div class="brand-info-text">
+        <div class="brand-title">PLANO 365</div>
+        <div class="brand-subtitle">Programa de Levantamento de Ações e Nivelamento Operacional • Filiais 5003 / 5070</div>
+      </div>
+    </div>
+
+    <!-- Profile Mode Switcher, User Session Info & Theme Toggle -->
+    <div class="profile-switcher-wrapper">
+      
+      <!-- Informações do Usuário Autenticado -->
+      <div id="user-session-info" class="user-session-pill" style="display: none;">
+        <span id="user-session-avatar" class="user-avatar">🛡️</span>
+        <div class="user-details">
+          <span id="user-session-name" class="user-name">Gestor Master</span>
+          <span id="user-session-role" class="user-role-tag">Gestão & PCM</span>
+        </div>
+      </div>
+
+      <div id="tech-selector-wrapper" class="tech-select-container" style="display: none;">
+        <select id="select-technician" class="select-styled" title="Visualizar dados do Técnico"></select>
+      </div>
+
+      <div id="profile-pill-toggle-container" class="profile-pill-toggle" style="display: none;">
+        <button id="btn-mode-master" class="btn-pill active" title="Visão Completa de Gestão">
+          🛡️ Modo Master
+        </button>
+        <button id="btn-mode-tecnico" class="btn-pill" title="Visão Restrita do Técnico">
+          🔧 Modo Técnico
+        </button>
+      </div>
+
+      <!-- Botão Sair / Logout -->
+      <button id="btn-logout" class="btn btn-outline btn-logout" title="Encerrar Sessão Segura" style="display: none;">
+        <span>🚪 Sair</span>
+      </button>
+
+      <!-- Botão Modo Escuro / Claro -->
+      <button id="btn-theme-toggle" class="btn-theme" title="Alternar entre Modo Escuro e Claro">
+        <span id="theme-icon">☀️</span>
+        <span id="theme-text">Modo Claro</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- TKE Move Beyond Hero Banner with Photos -->
+    <section class="tke-hero-banner">
+      <div class="tke-hero-content">
+        <span class="tke-hero-tag">TKE MOVE BEYOND • PLANO 365</span>
+        <h1 class="tke-hero-title">PLANO 365 — Programa de Levantamento de Ações e Nivelamento Operacional</h1>
+        <p class="tke-hero-desc">
+          Monitoramento de reincidências críticas (&lt;30 dias), zoneamento estrutural e matriz de capacitação técnica da frota — <strong>Filial 5003</strong> e <strong>Filial 5070</strong> • <strong>Zona 2 - Norte (Setores 1 a 8 + Corretivos)</strong>.
+        </p>
+      </div>
+      <div class="tke-hero-gallery">
+        <div class="tke-photo-card" title="Torre de Testes de Elevadores TKE">
+          <img src="assets/tke_test_tower.jpg" alt="Torre de Testes TKE">
+          <div class="tke-photo-label">Torre de Testes TKE</div>
+        </div>
+        <div class="tke-photo-card" title="Bancada de Engenharia e Caixa de Corrida TKE">
+          <img src="assets/tke_elevator_shaft.jpg" alt="Caixa e Mecânica de Elevador TKE">
+          <div class="tke-photo-label">Engenharia de Caixa</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Global Control Bar & Actions -->
+    <section class="control-bar">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="input-search" placeholder="Buscar por cliente, equipamento, falha, técnico ou ID...">
+      </div>
+
+      <div class="filter-actions-group">
+        <!-- Seletor de Filial -->
+        <select id="select-filial-filter" class="select-styled" title="Filtrar por Filial">
+          <option value="ALL">🏢 Todas as Filiais</option>
+          <option value="5003">Filial 5003</option>
+          <option value="5070">Filial 5070</option>
+        </select>
+
+        <!-- Seletor de Zona Operacional -->
+        <select id="select-zona-op-filter" class="select-styled" title="Filtrar por Zona Operacional">
+          <option value="ALL">🗺️ Todas as Zonas</option>
+          <option value="Zona 2 - Norte">Zona 2 - Norte</option>
+        </select>
+
+        <!-- Seletor de Setor / Equipe com Técnicos -->
+        <select id="select-setor-filter" class="select-styled" title="Filtrar por Setor ou Corretivo">
+          <option value="ALL">📍 Todos os Setores & Corretivos</option>
+          <optgroup label="Setores 1 a 8">
+            <option value="Setor 1">Setor - 1 - Lucas Rodrigues</option>
+            <option value="Setor 2">Setor - 2 - Elton Gomes</option>
+            <option value="Setor 3">Setor - 3 - Willian Wallace</option>
+            <option value="Setor 4">Setor - 4 - Allison Oliveira</option>
+            <option value="Setor 5">Setor - 5 - Douglas Bispo</option>
+            <option value="Setor 6">Setor - 6 - Jose Gomes</option>
+            <option value="Setor 7">Setor - 7 - Alisson Terencio</option>
+            <option value="Setor 8">Setor - 8 - Gilmario Manoel</option>
+          </optgroup>
+          <optgroup label="Equipe de Corretivos">
+            <option value="Corretivo - Anderson Lemos">Corretivos - Anderson Lemos</option>
+            <option value="Corretivo - Tiago Alves">Corretivos - Tiago Alves</option>
+            <option value="Corretivo - Alexandre Morais">Corretivos - Alexandre Morais</option>
+          </optgroup>
+        </select>
+
+        <!-- Seletor de Zona Física da Falha -->
+        <select id="select-zone-filter" class="select-styled" title="Filtrar por Zona Física da Falha">
+          <option value="ALL">⚙️ Todas as Zonas Físicas</option>
+          <option value="Outros">Outros</option>
+          <option value="Casa de Máquinas">Casa de Máquinas</option>
+          <option value="Cabina">Cabina</option>
+          <option value="Pavimento / Caixa de corrida">Pavimento / Caixa de corrida</option>
+        </select>
+
+        <!-- Seletor de Tipo de Contrato -->
+        <select id="select-contrato-filter" class="select-styled" title="Filtrar por Tipo de Contrato">
+          <option value="ALL">📑 Todos os Contratos</option>
+          <option value="Premium">⭐ Premium</option>
+          <option value="Plus">✨ Plus</option>
+          <option value="Service">🔧 Service</option>
+          <option value="Express">⚡ Express</option>
+          <option value="Digital">🌐 Digital</option>
+        </select>
+
+        <!-- Seletor de Quantidade de Chamados Corretivos -->
+        <select id="select-qtd-filter" class="select-styled" title="Filtrar por Quantidade de Chamados Corretivos">
+          <option value="ALL">🔢 Qtd. de Chamados (Todos)</option>
+          <option value="1">1 Chamado</option>
+          <option value="2">2 Chamados</option>
+          <option value="3">3 Chamados</option>
+          <option value="4+">4+ Chamados</option>
+          <option value="reincidentes">🚨 Reincidentes (≥ 2 Chamados)</option>
+          <option value="criticos">🔥 Críticos (≥ 3 Chamados)</option>
+        </select>
+
+        <button id="btn-add-os" class="btn btn-primary" title="Registrar Nova OS">
+          ➕ Nova OS
+        </button>
+        <button id="btn-import-data" class="btn btn-outline" title="Importar Lista ou CSV de Chamados">
+          📥 Importar
+        </button>
+        <button id="btn-export-csv" class="btn btn-outline" title="Exportar CSV da Base">
+          📤 Exportar
+        </button>
+        <button id="btn-reset-data" class="btn btn-outline" title="Restaurar Base de Teste TKE">
+          🔄 Restaurar
+        </button>
+      </div>
+    </section>
+
+    <!-- Profile Status Banner -->
+    <div id="profile-badge-banner" style="margin-bottom: 20px;">
+      <span class="badge badge-master">MODO MASTER: Gestão de Confiabilidade & PCM</span>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 1: MODO MASTER (GESTÃO / PCM / ENGENHARIA)                      -->
+    <!-- ==================================================================== -->
+    <div id="master-view">
+      
+      <!-- KPIs Globais -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-icon-blue">📋</div>
+          <div>
+            <div id="kpi-total-os" class="kpi-value">0</div>
+            <div class="kpi-label">Total de Atendimentos (OS)</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-icon-red">⚠️</div>
+          <div>
+            <div id="kpi-critical-equipments" class="kpi-value">0</div>
+            <div class="kpi-label">Equipamentos Críticos (&lt;30d)</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-icon-emerald">👷</div>
+          <div>
+            <div id="kpi-total-techs" class="kpi-value">0</div>
+            <div class="kpi-label">Técnicos Operacionais</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon kpi-icon-amber">📊</div>
+          <div>
+            <div id="kpi-reincidence-rate" class="kpi-value">0%</div>
+            <div class="kpi-label">Índice de Retrabalho</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Banner de Alerta Crítico para o Gestor: Planos de Ação Expirados -->
+      <div id="master-expired-plans-alert" class="alert-expired-banner" style="display: none;">
+        <div class="alert-expired-header">
+          <div class="alert-expired-title-box">
+            <span class="alert-icon-pulse">🚨</span>
+            <div>
+              <h3 class="alert-expired-title">ALERTA DE GESTÃO: Planos de Ação com Prazo de Execução Expirado</h3>
+              <p class="alert-expired-subtitle" id="master-expired-plans-subtitle">
+                Existem planos de ação técnicos que ultrapassaram a data limite sem conclusão.
+              </p>
+            </div>
+          </div>
+          <span class="badge badge-danger" id="master-expired-count-badge">0 Expirados</span>
+        </div>
+        <div id="master-expired-plans-list" class="alert-expired-cards-grid">
+          <!-- Cards de planos expirados preenchidos dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- 1. PAINEL DE REINCIDÊNCIAS CRÍTICAS (<30 DIAS) -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">🚨 1. Painel de Reincidências Críticas (&lt;30 Dias)</h2>
+            <span class="badge badge-danger">Classificação: CRÍTICO - REINCIDENTE</span>
+          </div>
+
+          <!-- Alternador de Visualização: Modo Tabela vs Modo Dashboard vs Gráfico Pizza -->
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="view-mode-toggle" id="recurrence-view-toggle">
+              <button type="button" id="btn-view-table" class="btn-toggle-mode" title="Visualização em Formato Tabela">
+                📋 Modo Tabela
+              </button>
+              <button type="button" id="btn-view-dashboard" class="btn-toggle-mode active" title="Visualização em Formato Dashboard (Cards com Ícones)">
+                📊 Modo Dashboard
+              </button>
+              <button type="button" id="btn-view-pie" class="btn-toggle-mode" title="Visualização em Formato Gráfico de Pizza">
+                🥧 Gráficos de Pizza
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Indicadores com Ícones (Mini Dashboard) -->
+        <div id="recurrence-stats-bar" class="recurrence-stats-bar">
+          <!-- Preenchido dinamicamente via JS -->
+        </div>
+
+        <!-- 1.1 Visualização em Tabela -->
+        <div id="container-recurrence-table" class="card" style="display: none;">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Equipamento</th>
+                  <th>Contrato</th>
+                  <th>Técnico Responsável</th>
+                  <th>Total Chamados</th>
+                  <th>Intervalo</th>
+                  <th>Zonas Afetadas</th>
+                  <th>Plano de Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-master-recurrence">
+                <!-- Preenchido dinamicamente via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 1.2 Visualização em Dashboard (Cards com Ícones) -->
+        <div id="container-recurrence-dashboard" class="recurrence-dash-grid">
+          <!-- Preenchido dinamicamente via JS com cards ricos de dashboard -->
+        </div>
+
+        <!-- 1.3 Visualização em Gráficos de Pizza (Pie Charts) -->
+        <div id="container-recurrence-pie" class="recurrence-pie-grid" style="display: none;">
+          <div class="card">
+            <h3 class="section-title mb-2" style="font-size: 15px; display: flex; align-items: center; gap: 8px;">
+              <span>🥧</span> Distribuição por Zona Física (Pizza)
+            </h3>
+            <p class="text-muted text-xs mb-3">Proporção de falhas reincidentes nas 4 zonas estruturais.</p>
+            <div class="chart-box" style="height: 270px;">
+              <canvas id="chart-recurrence-pie-zones"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="section-title mb-2" style="font-size: 15px; display: flex; align-items: center; gap: 8px;">
+              <span>🥧</span> Status dos Planos de Ação (Pizza)
+            </h3>
+            <p class="text-muted text-xs mb-3">Proporção de planos concluídos vs. pendentes de preenchimento.</p>
+            <div class="chart-box" style="height: 270px;">
+              <canvas id="chart-recurrence-pie-status"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="section-title mb-2" style="font-size: 15px; display: flex; align-items: center; gap: 8px;">
+              <span>🥧</span> Reincidências por Filial (Pizza)
+            </h3>
+            <p class="text-muted text-xs mb-3">Proporção de chamados críticos entre Filial 5003 e Filial 5070.</p>
+            <div class="chart-box" style="height: 270px;">
+              <canvas id="chart-recurrence-pie-filial"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics & Gráficos Globais -->
+      <section class="section-wrapper">
+        <div class="grid-2col">
+          <div class="card">
+            <h3 class="section-title mb-3">📍 Distribuição de Falhas por Zona Física</h3>
+            <div class="chart-box">
+              <canvas id="chart-master-zones"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="section-title mb-3">👥 Chamados por Técnico e Subsistema</h3>
+            <div class="chart-box">
+              <canvas id="chart-master-tech-zones"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. DESEMPENHO INDIVIDUAL POR TÉCNICO -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <h2 class="section-title">👷 2. Desempenho Individual por Técnico</h2>
+          <span class="text-muted text-sm">Relação de clientes atendidos e mapeamento por zona física</span>
+        </div>
+        <div id="container-master-tech-performance" class="tech-perf-grid">
+          <!-- Preenchido dinamicamente via JS -->
+        </div>
+      </section>
+
+      <!-- 3. MATRIZ DE TREINAMENTOS E DESENVOLVIMENTO (T&D) -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <h2 class="section-title">🎓 3. Matriz de Treinamentos e Desenvolvimento (T&D)</h2>
+          <span class="text-muted text-sm">Ações Preventivas e Corretivas para eliminação de retrabalhos (2+ ocorrências)</span>
+        </div>
+        <div id="container-master-training-matrix" class="matrix-container">
+          <!-- Preenchido dinamicamente via JS -->
+        </div>
+      </section>
+
+      <!-- 4. HISTÓRICO DE ATENDIMENTOS (VISÃO MASTER) -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">📋 4. Histórico de Atendimentos</h2>
+            <span class="text-muted text-sm">Visualização de atendimentos da frota (Visão Consolidada Master)</span>
+          </div>
+          <div class="history-table-filters">
+            <!-- Filtro por Técnico (Fnr atendeu) -->
+            <select id="select-history-tech-filter" class="select-styled history-filter-select" title="Filtrar Histórico por Técnico (Fnr atendeu)">
+              <option value="ALL">🔧 Todos os Técnicos</option>
+            </select>
+
+            <!-- Filtro por Edifício / Cliente -->
+            <select id="select-history-building-filter" class="select-styled history-filter-select" title="Filtrar Histórico por Edifício / Cliente">
+              <option value="ALL">🏢 Todos os Edifícios</option>
+            </select>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>OS</th>
+                  <th>Solicitação</th>
+                  <th>Edificio</th>
+                  <th>Elev</th>
+                  <th>Dta Cham.</th>
+                  <th>Fnr atendeu</th>
+                  <th>Fil</th>
+                  <th>Zon</th>
+                  <th>Set</th>
+                  <th>Descrição</th>
+                  <th>Tipo Contrato</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-master-history">
+                <!-- Preenchido dinamicamente via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 2: MODO TÉCNICO (OPERACIONAL / CAMPO)                           -->
+    <!-- ==================================================================== -->
+    <div id="technician-view" style="display: none;">
+      
+      <!-- Technician Profile Header -->
+      <section class="tech-profile-hero">
+        <div>
+          <span class="badge badge-tech">PERFIL OPERACIONAL DE CAMPO</span>
+          <h2 class="mt-2" style="font-size: 26px;">Técnico: <span id="tech-view-name" style="color: var(--accent-cyan);">-</span></h2>
+          <p class="text-muted text-sm">Visualização de atendimentos da frota habilitada. Edição de Planos de Ação exclusiva para equipamentos sob sua responsabilidade.</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <div class="card" style="padding: 12px 18px; text-align: center;">
+            <div id="tech-view-total-os" style="font-size: 24px; font-weight: 800; color: #fff;">0</div>
+            <div class="text-muted text-xs">Meus Chamados</div>
+          </div>
+          <div class="card" style="padding: 12px 18px; text-align: center;">
+            <div id="tech-view-critical-count" style="font-size: 24px; font-weight: 800; color: var(--accent-rose);">0</div>
+            <div class="text-muted text-xs">Reincidências (&lt;30d)</div>
+          </div>
+          <div class="card" style="padding: 12px 18px; text-align: center; border-color: rgba(245, 158, 11, 0.4);">
+            <div id="tech-view-pending-count" style="font-size: 24px; font-weight: 800; color: var(--accent-amber);">0</div>
+            <div class="text-muted text-xs">Planos Pendentes</div>
+          </div>
+          <div class="card" style="padding: 12px 18px; text-align: center; border-color: rgba(239, 68, 68, 0.4);">
+            <div id="tech-view-expired-count" style="font-size: 24px; font-weight: 800; color: var(--accent-rose);">0</div>
+            <div class="text-muted text-xs">Planos Vencidos</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Banner de Alerta Crítico para o Técnico: Planos Pendentes e Vencidos -->
+      <div id="tech-pending-expired-alert" class="alert-tech-banner" style="display: none;">
+        <div class="alert-tech-header">
+          <div class="alert-tech-title-box">
+            <span class="alert-icon-pulse">🚨</span>
+            <div>
+              <h3 class="alert-tech-title">ALERTA OPERACIONAL: Ações Obrigatórias Pendentes e Vencidas</h3>
+              <p class="alert-tech-subtitle" id="tech-pending-expired-subtitle">
+                Você possui planos de ação com preenchimento pendente ou prazo de execução vencido.
+              </p>
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <span class="badge badge-warning" id="tech-pending-badge">0 Pendentes</span>
+            <span class="badge badge-danger" id="tech-expired-badge">0 Vencidos</span>
+          </div>
+        </div>
+        <div id="tech-pending-expired-list" class="alert-tech-cards-grid">
+          <!-- Cards de planos do técnico preenchidos dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- 1. ALERTA DE REINCIDÊNCIA (<30 DIAS) & PLANO DE AÇÃO -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <h2 class="section-title">🚨 1. Alertas de Reincidência (&lt;30 Dias) & Planos de Ação</h2>
+          <span class="badge badge-danger">Ação Imediata de Campo</span>
+        </div>
+        <div id="container-tech-action-plans">
+          <!-- Preenchido dinamicamente via JS -->
+        </div>
+      </section>
+
+      <!-- 2. SEPARAÇÃO DAS FALHAS POR ZONA & GRÁFICO -->
+      <section class="section-wrapper">
+        <div class="grid-2col">
+          <div class="card">
+            <h3 class="section-title mb-3">📍 2. Minhas Falhas por Zona Física</h3>
+            <div class="chart-box">
+              <canvas id="chart-tech-zones"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="section-title mb-3">📋 Diagnóstico dos Meus Atendimentos</h3>
+            <p class="text-muted text-sm mb-3">Acompanhe a proporção de intervenções em Outros, Casa de Máquinas, Cabina e Pavimento / Caixa de corrida para calibrar sua rotina preventiva.</p>
+            <div id="container-tech-self-improvement">
+              <!-- Preenchido dinamicamente via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. MEU HISTÓRICO DE ATENDIMENTOS -->
+      <section class="section-wrapper">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">📋 3. Histórico de Atendimentos</h2>
+            <span class="text-muted text-sm">Visualização de atendimentos da frota (Edição restrita aos seus chamados)</span>
+          </div>
+          <div class="history-table-filters">
+            <!-- Filtro por Técnico (Fnr atendeu) -->
+            <select id="select-tech-history-tech-filter" class="select-styled history-filter-select" title="Filtrar Histórico por Técnico (Fnr atendeu)">
+              <option value="ALL">🔧 Todos os Técnicos</option>
+            </select>
+
+            <!-- Filtro por Edifício / Cliente -->
+            <select id="select-tech-history-building-filter" class="select-styled history-filter-select" title="Filtrar Histórico por Edifício / Cliente">
+              <option value="ALL">🏢 Todos os Edifícios</option>
+            </select>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>OS</th>
+                  <th>Solicitação</th>
+                  <th>Edificio</th>
+                  <th>Elev</th>
+                  <th>Dta Cham.</th>
+                  <th>Fnr atendeu</th>
+                  <th>Fil</th>
+                  <th>Zon</th>
+                  <th>Set</th>
+                  <th>Descrição</th>
+                  <th>Tipo Contrato</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-tech-history">
+                <!-- Preenchido dinamicamente via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ==================================================================== -->
+  <!-- MODAIS DO SISTEMA                                                    -->
+  <!-- ==================================================================== -->
+
+  <!-- Modal 1: Plano de Ação Estruturado -->
+  <div id="modal-action-plan" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: var(--accent-cyan);">📝 Plano de Ação para Eliminação de Reincidência</h3>
+        <button class="modal-close" onclick="closeActionPlanModal()">&times;</button>
+      </div>
+      <form id="form-action-plan">
+        <!-- Aviso de Somente Leitura -->
+        <div id="plan-readonly-notice" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #fca5a5;"></div>
+
+        <!-- Aviso de Plano Expirado -->
+        <div id="plan-expired-notice" style="display: none; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.55); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #fca5a5;"></div>
+
+        <!-- Aviso de Plano Pendente de Informação -->
+        <div id="plan-pending-notice" style="display: none; background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.55); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #fde68a;"></div>
+
+        <div class="grid-2col" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Cliente</label>
+            <input type="text" id="plan-cliente" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+            <label>Equipamento</label>
+            <input type="text" id="plan-equipamento" class="form-control" readonly>
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Técnico Responsável</label>
+            <input type="text" id="plan-tecnico" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+            <label>Zonas Afetadas</label>
+            <input type="text" id="plan-zonas" class="form-control" readonly>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>1. Causa-Raiz Técnica Diagnosticada (5 Porquês / Análise da Falha)</label>
+          <textarea id="plan-causa-raiz" class="form-control" required placeholder="Ex: Desgaste nas sapatas e centelhamento nos contatos de trinco devido a vibração..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>2. Ação Corretiva Imediata</label>
+          <textarea id="plan-acao-imediata" class="form-control" required placeholder="Ex: Executar alinhamento micrométrico e reaperto com torquímetro..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>3. Peças / Componentes Necessários para Troca Preventiva</label>
+          <input type="text" id="plan-pecas" class="form-control" placeholder="Ex: Contato elétrico de trinco 220V, mola espiral, cabo de manobra...">
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label>4. Prazo Previsto de Execução</label>
+            <input type="date" id="plan-prazo" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Status do Plano</label>
+            <select id="plan-status" class="form-control">
+              <option value="Em Elaboração">Em Elaboração</option>
+              <option value="Aguardando Peças">Aguardando Peças</option>
+              <option value="Em Execução">Em Execução</option>
+              <option value="Reparo">Reparo</option>
+              <option value="Concluído">Concluído</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Seção de Auditoria Técnica IA (Prompt 4) -->
+        <div id="plan-audit-box" style="display: none; margin-top: 16px; background: rgba(0,0,0,0.35); border: 1px solid var(--border-active); border-radius: var(--radius-md); padding: 14px;">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 style="font-size: 13px; color: var(--tke-orange-bright); display: flex; align-items: center; gap: 6px;">
+              🔍 Parecer do Auditor Técnico de Confiabilidade
+            </h4>
+            <span id="audit-verdict-badge" class="badge badge-success">Ação Definitiva</span>
+          </div>
+          <div id="audit-feedback-content" style="font-size: 12px; line-height: 1.5; color: var(--text-primary);"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeActionPlanModal()">Cancelar</button>
+          <button type="button" id="btn-suggest-plan" class="btn btn-outline">💡 Sugerir Preenchimento (5 Porquês)</button>
+          <button type="button" id="btn-audit-plan" class="btn btn-outline" style="border-color: var(--tke-orange);">🔍 Validar Plano (Auditoria IA)</button>
+          <button type="button" id="btn-print-plan" class="btn btn-outline">🖨️ Imprimir Formulário</button>
+          <button type="submit" id="btn-save-plan" class="btn btn-primary">Salvar Plano de Ação</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Adicionar Nova OS -->
+  <div id="modal-add-os" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>➕ Registrar Nova Ordem de Serviço (OS)</h3>
+        <button class="modal-close" onclick="closeAddOSModal()">&times;</button>
+      </div>
+      <form id="form-add-os">
+        <div class="grid-2col" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Data do Chamado</label>
+            <input type="date" id="os-data" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Técnico Responsável</label>
+            <select id="os-tecnico" class="form-control" required></select>
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Filial</label>
+            <select id="os-filial" class="form-control" required>
+              <option value="5003">Filial 5003</option>
+              <option value="5070">Filial 5070</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Zona Operacional & Setor</label>
+            <div class="d-flex gap-2">
+              <select id="os-zona-op" class="form-control" required style="flex: 1;">
+                <option value="Zona 2 - Norte">Zona 2 - Norte</option>
+              </select>
+              <select id="os-setor" class="form-control" required style="flex: 1;">
+                <optgroup label="Setores 1 a 8">
+                  <option value="Setor 1">Setor - 1 - Lucas Rodrigues</option>
+                  <option value="Setor 2">Setor - 2 - Elton Gomes</option>
+                  <option value="Setor 3">Setor - 3 - Willian Wallace</option>
+                  <option value="Setor 4">Setor - 4 - Allison Oliveira</option>
+                  <option value="Setor 5">Setor - 5 - Douglas Bispo</option>
+                  <option value="Setor 6">Setor - 6 - Jose Gomes</option>
+                  <option value="Setor 7">Setor - 7 - Alisson Terencio</option>
+                  <option value="Setor 8">Setor - 8 - Gilmario Manoel</option>
+                </optgroup>
+                <optgroup label="Equipe de Corretivos">
+                  <option value="Corretivo - Anderson Lemos">Corretivos - Anderson Lemos</option>
+                  <option value="Corretivo - Tiago Alves">Corretivos - Tiago Alves</option>
+                  <option value="Corretivo - Alexandre Morais">Corretivos - Alexandre Morais</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Cliente / Condomínio</label>
+            <input type="text" id="os-cliente" class="form-control" required placeholder="Ex: Edifício Sky Tower">
+          </div>
+          <div class="form-group">
+            <label>Equipamento</label>
+            <input type="text" id="os-equipamento" class="form-control" required placeholder="Ex: ELEV-01 (Social)">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Tipo de Contrato</label>
+          <select id="os-contrato" class="form-control" required>
+            <option value="Premium">⭐ Premium (Cobertura Total 24/7)</option>
+            <option value="Plus">✨ Plus (Preventiva + Corretiva Programada)</option>
+            <option value="Service">🔧 Service (Preventiva Mensal)</option>
+            <option value="Express">⚡ Express (Atendimento Rápido)</option>
+            <option value="Digital">🌐 Digital (MAX / Conectado Remoto)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Solicitação / Sintoma Relatado</label>
+          <input type="text" id="os-solicitacao" class="form-control" required placeholder="Ex: Porta de cabina travando na reabertura e passageiros retidos...">
+        </div>
+
+        <div class="form-group">
+          <label>Descrição da Falha e Intervenção Realizada</label>
+          <textarea id="os-descricao" class="form-control" required placeholder="Ex: Ajustado operador de porta de cabina e regulagem de tensão da correia..."></textarea>
+          <div id="os-zona-preview" class="text-xs text-muted mt-2" style="font-weight: bold; color: var(--accent-cyan);">
+            Zona Detectada: Cabina
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAddOSModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar OS</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Importar Chamados (CSV / JSON) -->
+  <div id="modal-import-data" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📥 Importar Base de Chamados</h3>
+        <button class="modal-close" onclick="closeImportModal()">&times;</button>
+      </div>
+      <form id="form-import-data">
+        <p class="text-muted text-sm mb-3">
+          Cole abaixo sua lista de ordens de serviço copiada diretamente do <strong>Excel</strong> ou em formato <strong>CSV</strong> (separado por ponto-e-vírgula, vírgula ou tabulação):
+        </p>
+        <div class="form-group">
+          <label>Estrutura Oficial da Planilha TKE (11 Colunas):</label>
+          <pre style="background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; font-size: 11px; color: var(--accent-cyan); margin-bottom: 10px; overflow-x: auto;">OS;Solicitação;Edificio;Elev;Dta Cham.;Fnr atendeu;Fil;Zon;Set;Descrição;Tipo Contrato</pre>
+          <textarea id="import-text-content" class="form-control" style="min-height: 160px;" required placeholder="OS-2026-101;Porta de cabina travando na reabertura;Edifício Sky Tower;ELEV-01;12/08/2026;Lucas Rodrigues;5003;Cabina;Setor 1;Ajuste e lubrificação do operador de porta;Premium"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeImportModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Processar e Importar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- PORTAL DE AUTENTICAÇÃO E CONTROLE DE ACESSO SEGURO                   -->
+  <!-- ==================================================================== -->
+  <div id="auth-portal-overlay" class="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="tke-logo-box auth-logo">
+          <span class="tke-brand-text">TKE</span>
+          <div class="tke-slogan">MOVE<br>BEYOND</div>
+        </div>
+        <h2 class="auth-title">PLANO 365 • Acesso Seguro</h2>
+        <p class="auth-subtitle">Engenharia de Manutenção & Confiabilidade de Elevadores</p>
+      </div>
+
+      <!-- Abas de Tipo de Perfil -->
+      <div class="auth-profile-tabs">
+        <button type="button" id="tab-auth-master" class="auth-tab active">
+          🛡️ Perfil Master (Gestão/PCM)
+        </button>
+        <button type="button" id="tab-auth-tecnico" class="auth-tab">
+          🔧 Perfil Técnico (Campo)
+        </button>
+      </div>
+
+      <div id="auth-role-description" class="auth-role-badge">
+        <strong>Acesso Master:</strong> Visão consolidada, todos os 11 técnicos, frotas, reincidências e matriz T&D.
+      </div>
+
+      <form id="form-auth-login" class="auth-form">
+        <!-- Seletor Rápido de Contas -->
+        <div class="form-group" id="quick-user-select-group">
+          <label for="select-quick-user">Selecionar Usuário para Demonstração / Acesso Rápido:</label>
+          <select id="select-quick-user" class="form-control select-styled">
+            <option value="">-- Selecione um usuário cadastrado --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-auth-username">Identificação / Login (Usuário):</label>
+          <div class="input-with-icon">
+            <span class="input-icon">👤</span>
+            <input type="text" id="input-auth-username" class="form-control" placeholder="ex: master ou lucas.rodrigues" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-auth-password">Senha de Segurança:</label>
+          <div class="input-with-icon password-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="input-auth-password" class="form-control" placeholder="Digite sua senha (padrão: 123)" required autocomplete="current-password">
+            <button type="button" id="btn-toggle-password" class="btn-toggle-pass" title="Mostrar/Ocultar Senha">👁️</button>
+          </div>
+        </div>
+
+        <div id="auth-error-alert" class="auth-error" style="display: none;">
+          ⚠️ Usuário ou senha incorretos.
+        </div>
+
+        <button type="submit" id="btn-submit-login" class="btn btn-primary auth-submit-btn">
+          🔐 Entrar no Sistema TKE
+        </button>
+      </form>
+
+      <div class="auth-footer-notes">
+        <div class="auth-directive-badge">
+          🛡️ <strong>Diretrizes TKE Ativas:</strong> Técnicos possuem privacidade estrita (apenas seus chamados). Gestores possuem visão global.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/sampleData.js"></script>
+  <script src="js/classifier.js"></script>
+  <script src="js/actionPlan.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
