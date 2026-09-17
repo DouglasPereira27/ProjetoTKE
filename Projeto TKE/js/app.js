@@ -56,26 +56,34 @@ document.addEventListener("DOMContentLoaded", () => {
   checkAuthAndRender();
 });
 
+const STORAGE_KEY = "TKE_MAINTENANCE_DATA_V10";
+
 /**
  * Inicializa a base de dados (localStorage ou SampleData)
  */
 function initData() {
-  const savedData = localStorage.getItem("TKE_MAINTENANCE_DATA_V9") || 
-                    localStorage.getItem("TKE_MAINTENANCE_DATA_V8") || 
-                    localStorage.getItem("TKE_MAINTENANCE_DATA_V7");
+  localStorage.removeItem("TKE_MAINTENANCE_DATA_V9");
+  localStorage.removeItem("TKE_MAINTENANCE_DATA_V8");
+  localStorage.removeItem("TKE_MAINTENANCE_DATA_V7");
+  localStorage.removeItem("TKE_MAINTENANCE_DATA_V6");
+  localStorage.removeItem("TKE_MAINTENANCE_DATA_V5");
+  localStorage.removeItem("TKE_MAINTENANCE_DATA");
+
+  const savedData = localStorage.getItem(STORAGE_KEY);
   if (savedData) {
     try {
-      AppState.data = JSON.parse(savedData);
+      AppState.data = JSON.parse(savedData) || [];
     } catch (e) {
-      AppState.data = [...SAMPLE_MAINTENANCE_DATA];
+      AppState.data = [];
     }
   } else {
-    AppState.data = [...SAMPLE_MAINTENANCE_DATA];
+    AppState.data = [];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
   }
 
   // Normalização profunda de todos os registros: técnico único, matrícula, filial, setor, contrato, zona e código de falha
   AppState.data.forEach((item, idx) => {
-    item.tecnico = normalizeTechName(item.tecnico) || "Lucas Rodrigues Baccega";
+    item.tecnico = normalizeTechName(item.tecnico) || "";
 
     // Migração de setores legados
     if (item.setor === "Corretivo - Anderson Lemos") item.setor = "Volante / Corretivo - Anderson Lemos";
@@ -83,16 +91,16 @@ function initData() {
     if (item.setor === "Corretivo - Alexandre Morais") item.setor = "Volante / Corretivo - Alexandre Morais";
 
     if (!item.filial) {
-      item.filial = idx % 2 === 0 ? "5003" : "5070";
+      item.filial = "5003";
     }
     if (!item.zonaOperacional) {
       item.zonaOperacional = "Zona 2 - Norte";
     }
     if (!item.setor) {
-      item.setor = `Setor ${(idx % 8) + 1}`;
+      item.setor = "Setor 1";
     }
     if (!item.contrato) {
-      item.contrato = (typeof CLIENT_CONTRACT_MAP !== "undefined" && CLIENT_CONTRACT_MAP[item.cliente]) || "Premium";
+      item.contrato = "Premium";
     }
     item.matricula = getTechMatricula(item.tecnico);
     if (!item.solicitacao) {
@@ -123,7 +131,7 @@ function initData() {
 }
 
 function saveDataToStorage() {
-  localStorage.setItem("TKE_MAINTENANCE_DATA_V9", JSON.stringify(AppState.data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(AppState.data));
 }
 
 /**
@@ -1725,6 +1733,9 @@ function renderMasterTrainingMatrix(trainingMatrix) {
             <h4>🔧 ${item.tecnico}</h4>
             <div class="d-flex align-items-center gap-2">
               <span class="badge badge-success">Sem Reincidências Graves</span>
+              <button type="button" class="btn btn-xs btn-ai-gradient" onclick="AITechPlanEngine.openModal('${item.tecnico}')" title="Gerar Plano de Desenvolvimento com IA">
+                🤖 Plano IA (PDI)
+              </button>
               <button type="button" class="btn btn-xs btn-outline" onclick="openTechProfileFromMaster('${item.tecnico}')" title="Acessar Perfil Técnico">
                 🔍 Perfil
               </button>
@@ -1744,6 +1755,9 @@ function renderMasterTrainingMatrix(trainingMatrix) {
           </div>
           <div class="d-flex align-items-center gap-2">
             <span class="badge badge-danger">Reincidência Detectada (2+ falhas)</span>
+            <button type="button" class="btn btn-xs btn-ai-gradient" onclick="AITechPlanEngine.openModal('${item.tecnico}')" title="Gerar Plano de IA para Eliminar Retrabalho">
+              🤖 Plano IA (PDI)
+            </button>
             <button type="button" class="btn btn-xs btn-outline" onclick="openTechProfileFromMaster('${item.tecnico}')" title="Acessar Perfil Técnico">
               🔍 Perfil
             </button>
@@ -2272,7 +2286,12 @@ function renderTechSelfImprovement(myPerf, myRecurrenceList) {
   if (zonesWithReincidence.length === 0) {
     container.innerHTML = `
       <div class="card p-4">
-        <h4>Trilha de Desenvolvimento Contínuo</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h4>Trilha de Desenvolvimento Contínuo</h4>
+          <button type="button" class="btn btn-sm btn-ai-gradient" onclick="AITechPlanEngine.openModal('${myPerf.nome}')">
+            🤖 Gerar Meu PDI com IA
+          </button>
+        </div>
         <p class="text-muted">${isSelf ? "Você não possui reincidências críticas acumuladas. Continue revisando os procedimentos padrão de manutenção preventiva e lubrificação técnica." : `Nenhuma reincidência crítica acumulada para ${myPerf.nome}. Continue revisando os procedimentos padrão de manutenção preventiva.`}</p>
       </div>
     `;
@@ -2281,11 +2300,14 @@ function renderTechSelfImprovement(myPerf, myRecurrenceList) {
 
   container.innerHTML = `
     <div class="card">
-      <div class="card-header-styled">
+      <div class="card-header-styled d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
           <h4>🎯 Matriz Pessoal de Auto-Aprimoramento Técnico</h4>
           <span class="text-muted text-sm">${isSelf ? "Baseado exclusivamente nos seus atendimentos reincidentes para elevar sua assertividade em campo:" : `Baseado nos atendimentos de ${myPerf.nome} para elevar a assertividade em campo:`}</span>
         </div>
+        <button type="button" class="btn btn-sm btn-ai-gradient" onclick="AITechPlanEngine.openModal('${myPerf.nome}')">
+          🤖 Ver Meu Plano de IA (PDI)
+        </button>
       </div>
       
       <div class="self-improvement-grid">
@@ -2835,23 +2857,12 @@ function exportDataCSV() {
 }
 
 function resetSampleData() {
-  if (confirm("Deseja restaurar a base de dados para os dados padrão da TKE com a equipe dos 8 Setores e Códigos Oficiais?")) {
-    AppState.data = [...SAMPLE_MAINTENANCE_DATA];
-    AppState.data.forEach(item => {
-      if (!item.codigoFalha) {
-        const detected = findFailureCodeByText(`${item.descricao || ""} ${item.solicitacao || ""}`);
-        if (detected) {
-          item.codigoFalha = detected.code;
-          item.descricaoFalha = detected.name;
-          item.zona = detected.zone;
-        }
-      }
-      item.zona = normalizeZoneName(item.zona) || classifyZone(item.descricao, item.solicitacao);
-    });
+  if (confirm("Deseja limpar todos os chamados da base de dados?")) {
+    AppState.data = [];
     saveDataToStorage();
     populateTechnicianDropdown();
     renderActiveView();
-    showToast("Base de dados restaurada com os técnicos dos Setores 1 a 8 e códigos oficiais!");
+    showToast("Base de dados de chamados limpa com sucesso!");
   }
 }
 

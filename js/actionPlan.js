@@ -4,7 +4,7 @@
  */
 
 const ActionPlanManager = {
-  STORAGE_KEY: "TKE_ACTION_PLANS_V2",
+  STORAGE_KEY: "TKE_ACTION_PLANS_V3",
 
   getAllPlans() {
     try {
@@ -21,32 +21,9 @@ const ActionPlanManager = {
     try {
       const existing = localStorage.getItem(this.STORAGE_KEY);
       if (!existing) {
-        // Tentar migrar de V1 se existir
-        const oldData = localStorage.getItem("TKE_ACTION_PLANS_V1");
-        let initialPlans = {};
-        if (oldData) {
-          try { initialPlans = JSON.parse(oldData); } catch (err) {}
-        }
-        
-        if (Object.keys(initialPlans).length === 0) {
-          initialPlans = {
-            "Hospital Metropolitano___ELEV-04 (Leito 1)": {
-              cliente: "Hospital Metropolitano",
-              equipamento: "ELEV-04 (Leito 1)",
-              tecnico: "Douglas Geraldin Bispo",
-              zonasAfetadas: "Pavimento / Caixa de corrida",
-              causaRaiz: "Desalinhamento do suporte da polia tensora do limitador de velocidade e descalibração na chave de limite/fim de curso.",
-              acaoImediata: "Realizar reaperto com torquímetro, alinhamento a laser da polia tensora e reteste de chaves de fim de curso e stop.",
-              pecasNecessarias: "Rolamento blindado da polia tensora, chave de fim de curso IP65.",
-              prazoExecucao: "2026-09-05",
-              status: "Em Elaboração",
-              geradoAutomaticamente: true,
-              geradoEm: "2026-08-29T10:00:00.000Z",
-              atualizadoEm: "2026-09-04T18:30:00.000Z"
-            }
-          };
-        }
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(initialPlans));
+        localStorage.removeItem("TKE_ACTION_PLANS_V2");
+        localStorage.removeItem("TKE_ACTION_PLANS_V1");
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify({}));
       }
     } catch (e) {
       console.error("Erro ao inicializar planos padrão:", e);
