@@ -386,6 +386,7 @@ function checkAuthAndRender() {
   const techSelectorWrapper = document.getElementById("tech-selector-wrapper");
   const btnResetData = document.getElementById("btn-reset-data");
   const btnImportData = document.getElementById("btn-import-data");
+  const btnExportCsv = document.getElementById("btn-export-csv");
   const masterView = document.getElementById("master-view");
   const techView = document.getElementById("technician-view");
 
@@ -437,6 +438,7 @@ function checkAuthAndRender() {
     if (techSelectorWrapper) techSelectorWrapper.style.display = "flex";
     if (btnResetData) btnResetData.style.display = "inline-flex";
     if (btnImportData) btnImportData.style.display = "inline-flex";
+    if (btnExportCsv) btnExportCsv.style.display = "inline-flex";
     populateTechnicianDropdown();
     switchProfile("MASTER");
   } else {
@@ -448,6 +450,7 @@ function checkAuthAndRender() {
     if (techSelectorWrapper) techSelectorWrapper.style.display = "none";
     if (btnResetData) btnResetData.style.display = "none";
     if (btnImportData) btnImportData.style.display = "none";
+    if (btnExportCsv) btnExportCsv.style.display = "none";
     switchProfile("TECNICO");
   }
 }
@@ -679,6 +682,7 @@ function switchProfile(profile) {
   const btnMaster = document.getElementById("btn-mode-master");
   const btnTecnico = document.getElementById("btn-mode-tecnico");
   const btnImportData = document.getElementById("btn-import-data");
+  const btnExportCsv = document.getElementById("btn-export-csv");
   const techSelectorWrapper = document.getElementById("tech-selector-wrapper");
   const profileBanner = document.getElementById("profile-banner");
 
@@ -694,6 +698,7 @@ function switchProfile(profile) {
     btnMaster?.classList.add("active");
     btnTecnico?.classList.remove("active");
     if (btnImportData) btnImportData.style.display = "inline-flex";
+    if (btnExportCsv) btnExportCsv.style.display = "inline-flex";
     if (profileBanner) {
       profileBanner.innerHTML = `<span class="badge badge-master">🛡️ MODO MASTER: Gestão de Confiabilidade & PCM (Visão Consolidada)</span>`;
     }
@@ -701,6 +706,7 @@ function switchProfile(profile) {
     btnMaster?.classList.remove("active");
     btnTecnico?.classList.add("active");
     if (btnImportData) btnImportData.style.display = "none"; // Ocultar botão de importar para o perfil técnico
+    if (btnExportCsv) btnExportCsv.style.display = "none"; // Ocultar botão de exportar para o perfil técnico
 
     if (profileBanner) {
       const techDisplay = AppState.currentUser?.role === "TECNICO" ? AppState.currentUser.nome : AppState.selectedTech;
@@ -2836,9 +2842,13 @@ function handleImportSubmit(e) {
 }
 
 function exportDataCSV() {
-  const isTech = AppState.currentUser && AppState.currentUser.role === "TECNICO";
+  if (AppState.currentUser && AppState.currentUser.role === "TECNICO") {
+    showToast("Acesso restrito: Exportação de dados permitida apenas para Gestão / Master.");
+    return;
+  }
+  const isTech = AppState.profile === "TECNICO";
   const recordsToExport = isTech 
-    ? AppState.data.filter(d => d.tecnico === AppState.currentUser.techName) 
+    ? AppState.data.filter(d => (normalizeTechName(d.tecnico) || d.tecnico) === (AppState.selectedTech || AppState.currentUser?.techName)) 
     : AppState.data;
 
   // Sequência oficial TKE: OS, Solicitação, Edificio, Elev, Dta Cham., Fnr atendeu, Fil, Zon, Set, Descrição, Tipo Contrato, Status
