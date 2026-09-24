@@ -1058,7 +1058,7 @@
         </div>
       </div>
 
-      <!-- ETAPA 2: LINK ENVIADO COM SUCESSO (SIMULAÇÃO E-MAIL CORPORATIVO) -->
+      <!-- ETAPA 2: LINK ENVIADO COM SUCESSO -->
       <div id="reset-step-sent" class="reset-step-container" style="display: none;">
         <div class="auth-header">
           <div class="tke-logo-box auth-logo">
@@ -1082,18 +1082,30 @@
           </div>
         </div>
 
-        <!-- Box de Simulação / Recebimento do E-mail Seguro -->
-        <div style="background: rgba(0, 0, 0, 0.35); border: 1px dashed rgba(245, 158, 11, 0.5); border-radius: var(--radius-md); padding: 14px; margin-bottom: 18px;">
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <span style="font-size: 16px;">📬</span>
-            <strong style="font-size: 12.5px; color: #fbbf24;">Simulação de Caixa de Entrada (E-mail TKE):</strong>
+        <!-- Instruções de Acesso ao E-mail -->
+        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 18px; text-align: left;">
+          <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 18px;">✉️</span>
+            <div>
+              <strong style="font-size: 12.5px; color: var(--text-primary); display: block; margin-bottom: 3px;">Acesse sua caixa de entrada</strong>
+              <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                Abra a mensagem recebida com o assunto <strong>[PLANO 365] Link Seguro para Redefinição de Senha</strong> e clique no link para cadastrar sua nova senha.
+              </p>
+            </div>
           </div>
-          <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 10px;">
-            Assunto: <strong>[PLANO 365] Link Seguro para Redefinição de Senha</strong><br>
-            Recebemos a solicitação de redefinição de acesso. Clique no botão abaixo para criar sua nova senha com segurança:
-          </p>
-          <button type="button" id="btn-open-email-reset-link" class="btn btn-primary" style="width: 100%; padding: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            🔗 Acessar Link de Redefinição de Senha
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+            <span>⏱️ Validade do link: <strong>30 minutos</strong></span>
+            <span>•</span>
+            <span>🔒 Uso único e intransferível</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+          <a id="btn-open-webmail" href="https://outlook.office.com/mail/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;">
+            📬 Abrir E-mail Corporativo (Outlook / Webmail)
+          </a>
+          <button type="button" id="btn-copy-reset-link" class="btn btn-outline" style="padding: 8px 12px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            📋 Copiar Link de Redefinição
           </button>
         </div>
 

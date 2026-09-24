@@ -219,9 +219,11 @@ function setupAuthEventListeners() {
   const inputResetNewPass = document.getElementById("input-reset-new-pass");
   const inputResetConfirmPass = document.getElementById("input-reset-confirm-pass");
   const btnOpenEmailResetLink = document.getElementById("btn-open-email-reset-link");
+  const btnCopyResetLink = document.getElementById("btn-copy-reset-link");
 
   formRequestResetEmail?.addEventListener("submit", handleRequestResetEmailSubmit);
   btnOpenEmailResetLink?.addEventListener("click", handleOpenEmailResetLinkClick);
+  btnCopyResetLink?.addEventListener("click", handleCopyResetLinkClick);
   formResetPassword?.addEventListener("submit", handleResetPasswordSubmit);
   inputResetNewPass?.addEventListener("input", updateResetPasswordStrengthUI);
   inputResetConfirmPass?.addEventListener("input", updateResetPasswordStrengthUI);
@@ -3199,6 +3201,23 @@ function handleOpenEmailResetLinkClick() {
   openResetPasswordTokenModal(currentResetTokenActive);
 }
 
+function handleCopyResetLinkClick() {
+  if (!currentResetTokenActive) return;
+  const origin = (typeof window !== "undefined" && window.location.origin && window.location.origin !== "null") ? window.location.origin : "";
+  const pathname = (typeof window !== "undefined" && window.location.pathname) ? window.location.pathname : "";
+  const resetUrl = `${origin}${pathname}?reset_token=${currentResetTokenActive}`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(resetUrl).then(() => {
+      showToast("📋 Link de redefinição copiado com sucesso!");
+    }).catch(() => {
+      prompt("Copie o link seguro de redefinição de senha:", resetUrl);
+    });
+  } else {
+    prompt("Copie o link seguro de redefinição de senha:", resetUrl);
+  }
+}
+
 function openResetPasswordTokenModal(token, preloadedUser = null) {
   const result = AuthManager.validateResetToken(token);
   if (!result.success) {
@@ -3305,6 +3324,12 @@ function handleResetPasswordSubmit(e) {
 
   if (result.success) {
     if (errorAlert) errorAlert.style.display = "none";
+    currentResetTokenActive = "";
+    try {
+      if (typeof window !== "undefined" && window.history && window.history.replaceState) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    } catch (err) {}
     closeResetPasswordModal();
     showToast(`🎉 ${result.message || "Senha redefinida com sucesso!"}`);
 
