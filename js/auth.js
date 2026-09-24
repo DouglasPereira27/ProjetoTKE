@@ -761,18 +761,14 @@ const UserManager = {
 
     const user = users[index];
 
-    // Validação de Identidade: senha atual (pura ou hash), matrícula, e-mail ou senhas mestras
+    // Validação de Identidade: senha atual (pura ou hash), matrícula, e-mail ou senha provisória pendente
     const verifHash = this.hashPassword(cleanVerif);
     const isValidVerification = 
       (user.senha && user.senha === cleanVerif) ||
       (user.senhaHash && user.senhaHash === verifHash) ||
       (user.matricula && String(user.matricula).trim() === cleanVerif) ||
       (user.email && user.email.toLowerCase() === cleanVerif.toLowerCase()) ||
-      (user.senhaProvisoria && user.senhaProvisoria === cleanVerif) ||
-      cleanVerif === "123" ||
-      cleanVerif === "master2026" ||
-      cleanVerif === "campo2026" ||
-      cleanVerif === "Plano@1234";
+      (user.senhaProvisoria && user.senhaProvisoria === cleanVerif);
 
     if (!isValidVerification) {
       return { success: false, message: "A verificação de segurança (senha atual ou matrícula) está incorreta." };
@@ -789,6 +785,147 @@ const UserManager = {
 
     this.saveUsers(users);
     return { success: true, user: users[index], message: "Senha redefinida com sucesso! Você já pode efetuar o login com a nova senha." };
+  },
+
+  /**
+   * Solicita o envio de link seguro de redefinição de senha para o e-mail cadastrado
+   * @param {string} identifier (username, e-mail ou matrícula)
+   * @returns {{ success: boolean, user?: object, email?: string, maskedEmail?: string, token?: string, resetUrl?: string, message?: string }}
+   */
+  requestPasswordResetByEmail(identifier) {
+    if (!identifier) {
+      return { success: false, message: "Por favor, informe seu usuário, e-mail ou matrícula." };
+    }
+
+    const cleanId = String(identifier).trim().toLowerCase();
+    const user = this.getUserByLogin(cleanId);
+
+    if (!user) {
+      return { success: false, message: "Usuário, e-mail ou matrícula não localizado no cadastro do PLANO 365." };
+    }
+
+    // Garantir e-mail cadastrado
+    const email = (user.email || (user.username + "@tkelevator.com")).trim().toLowerCase();
+
+    // Gerar token seguro de recuperação com validade de 30 minutos
+    const token = "tke_rst_" + Math.random().toString(36).substring(2, 10) + "_" + Date.now().toString(36);
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+
+    const users = this.getUsers();
+    const idx = users.findIndex(u => u.id === user.id);
+    if (idx !== -1) {
+      users[idx].email = email;
+      users[idx].resetToken = token;
+      users[idx].resetTokenExpiresAt = expiresAt;
+      this.saveUsers(users);
+    }
+
+    // Mascarar e-mail para exibição segura (ex: dou***2@tkelevator.com)
+    const parts = email.split("@");
+    const namePart = parts[0];
+    const domainPart = parts[1] || "tkelevator.com";
+    const maskedName = namePart.length > 4 
+      ? namePart.slice(0, 3) + "***" + namePart.slice(-1)
+      : namePart.slice(0, 1) + "***";
+    const maskedEmail = `${maskedName}@${domainPart}`;
+
+    // Construir URL do link seguro
+    const baseUrl = window.location.origin + window.location.pathname;
+    const resetUrl = `${baseUrl}?reset_token=${encodeURIComponent(token)}`;
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        username: user.username,
+        nome: user.nome,
+        matricula: user.matricula,
+        cargo: user.cargo,
+        avatar: user.avatar,
+        email: email
+      },
+      email: email,
+      maskedEmail: maskedEmail,
+      token: token,
+      resetUrl: resetUrl,
+      message: `Link de redefinição encaminhado com sucesso para o e-mail ${email}.`
+    };
+  },
+
+  /**
+   * Valida o token de redefinição de senha
+   * @param {string} token 
+   * @returns {{ success: boolean, user?: object, message?: string }}
+   */
+  validateResetToken(token) {
+    if (!token) {
+      return { success: false, message: "Token de redefinição não fornecido." };
+    }
+
+    const users = this.getUsers();
+    const user = users.find(u => u.resetToken === token);
+
+    if (!user) {
+      return { success: false, message: "O link de redefinição é inválido ou já foi utilizado." };
+    }
+
+    if (user.resetTokenExpiresAt && new Date(user.resetTokenExpiresAt) < new Date()) {
+      return { success: false, message: "O link de redefinição expirou. Solicite um novo envio." };
+    }
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        username: user.username,
+        nome: user.nome,
+        matricula: user.matricula,
+        cargo: user.cargo,
+        avatar: user.avatar,
+        email: user.email
+      }
+    };
+  },
+
+  /**
+   * Conclui a redefinição de senha através do token do link de e-mail
+   * @param {string} token 
+   * @param {string} newPassword 
+   * @returns {{ success: boolean, user?: object, message?: string }}
+   */
+  resetPasswordWithToken(token, newPassword) {
+    if (!token || !newPassword) {
+      return { success: false, message: "Token e nova senha são obrigatórios." };
+    }
+
+    const users = this.getUsers();
+    const index = users.findIndex(u => u.resetToken === token);
+
+    if (index === -1) {
+      return { success: false, message: "Link de redefinição inválido ou expirado." };
+    }
+
+    if (users[index].resetTokenExpiresAt && new Date(users[index].resetTokenExpiresAt) < new Date()) {
+      return { success: false, message: "O link de redefinição expirou. Solicite um novo envio." };
+    }
+
+    const passHash = this.hashPassword(newPassword);
+
+    users[index].senha = newPassword;
+    users[index].senhaHash = passHash;
+    users[index].primeiro_acesso = false; // Assegura acesso liberado após redefinição
+    users[index].senhaProvisoria = null;
+    users[index].resetToken = null;
+    users[index].resetTokenExpiresAt = null;
+    users[index].senhaAlteradaEm = new Date().toISOString();
+    users[index].atualizadoEm = new Date().toISOString();
+
+    this.saveUsers(users);
+    return {
+      success: true,
+      user: users[index],
+      message: "Senha redefinida com sucesso! Você já pode efetuar o login com a nova senha."
+    };
   }
 };
 
@@ -817,17 +954,12 @@ const AuthManager = {
       return { success: false, message: "Usuário ou e-mail não encontrado no sistema." };
     }
 
-    // Validação de senha: Hash SHA-256, senha em texto puro ou overrides de demonstração
+    // Validação estrita de senha: Apenas a senha atualmente ativa cadastrada (Hash SHA-256 ou texto puro atual)
+    // Após a redefinição de senha, senhas anteriores, provisórias antigas ou genéricas NÃO são permitidas.
     const inputHash = UserManager.hashPassword(cleanPass);
     const isValidPass = 
       (user.senhaHash && user.senhaHash === inputHash) ||
-      (user.senha && user.senha === cleanPass) ||
-      cleanPass === "123" ||
-      cleanPass === "master2026" ||
-      cleanPass === "campo2026" ||
-      cleanPass === "tke@master2026" ||
-      cleanPass === "tke@campo2026" ||
-      (user.senhaProvisoria && user.senhaProvisoria === cleanPass);
+      (user.senha && user.senha === cleanPass);
 
     if (!isValidPass) {
       return { success: false, message: "Senha incorreta. Verifique suas credenciais." };
@@ -1047,6 +1179,48 @@ const AuthManager = {
       user: updateResult.user,
       message: "Senha atualizada com sucesso! Você já pode entrar com a nova credencial."
     };
+  },
+
+  /**
+   * Solicita o envio de link de redefinição para o e-mail cadastrado
+   * @param {string} identifier 
+   * @returns {{ success: boolean, user?: object, email?: string, maskedEmail?: string, token?: string, resetUrl?: string, message?: string }}
+   */
+  requestPasswordResetByEmail(identifier) {
+    return UserManager.requestPasswordResetByEmail(identifier);
+  },
+
+  /**
+   * Valida o token recebido pelo link de e-mail
+   * @param {string} token 
+   * @returns {{ success: boolean, user?: object, message?: string }}
+   */
+  validateResetToken(token) {
+    return UserManager.validateResetToken(token);
+  },
+
+  /**
+   * Conclui a redefinição de nova senha utilizando o token de e-mail
+   * @param {string} token 
+   * @param {string} newPassword 
+   * @param {string} confirmPassword 
+   * @returns {{ success: boolean, user?: object, message?: string }}
+   */
+  resetPasswordWithToken(token, newPassword, confirmPassword) {
+    if (!token || !newPassword || !confirmPassword) {
+      return { success: false, message: "Por favor, preencha e confirme sua nova senha." };
+    }
+
+    if (newPassword !== confirmPassword) {
+      return { success: false, message: "A confirmação de senha não confere com a nova senha digitada." };
+    }
+
+    const policy = this.validatePasswordPolicy(newPassword);
+    if (!policy.valid) {
+      return { success: false, message: policy.errors[0] || "A nova senha não atende aos requisitos de segurança." };
+    }
+
+    return UserManager.resetPasswordWithToken(token, newPassword);
   },
 
   /**

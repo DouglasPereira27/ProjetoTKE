@@ -213,16 +213,29 @@ function setupAuthEventListeners() {
   firstAccessTempPass?.addEventListener("input", updateFirstAccessStrengthUI);
   btnCancelFirstAccess?.addEventListener("click", closeFirstAccessModal);
 
-  // Listeners do Modal de Redefinição de Senha (Após 1º acesso / Esqueci a senha)
+  // Listeners do Modal de Redefinição de Senha (Fluxo Seguro por E-mail)
+  const formRequestResetEmail = document.getElementById("form-request-reset-email");
   const formResetPassword = document.getElementById("form-reset-password");
   const inputResetNewPass = document.getElementById("input-reset-new-pass");
   const inputResetConfirmPass = document.getElementById("input-reset-confirm-pass");
-  const inputResetCurrentPass = document.getElementById("input-reset-current-pass");
+  const btnOpenEmailResetLink = document.getElementById("btn-open-email-reset-link");
 
+  formRequestResetEmail?.addEventListener("submit", handleRequestResetEmailSubmit);
+  btnOpenEmailResetLink?.addEventListener("click", handleOpenEmailResetLinkClick);
   formResetPassword?.addEventListener("submit", handleResetPasswordSubmit);
   inputResetNewPass?.addEventListener("input", updateResetPasswordStrengthUI);
   inputResetConfirmPass?.addEventListener("input", updateResetPasswordStrengthUI);
-  inputResetCurrentPass?.addEventListener("input", updateResetPasswordStrengthUI);
+
+  // Verificação de parâmetro de link de redefinição na URL (reset_token)
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const resetToken = urlParams.get("reset_token");
+    if (resetToken) {
+      setTimeout(() => openResetPasswordTokenModal(resetToken), 350);
+    }
+  } catch (e) {
+    console.warn("Aviso ao ler parâmetros de URL:", e);
+  }
 
   // Listeners do Módulo Administrativo de Gestão de Usuários (Supervisor)
   btnUserMgmt?.addEventListener("click", openUserManagementModal);
@@ -3078,9 +3091,10 @@ function handleFirstAccessResetSubmit(e) {
 }
 
 // ==========================================================================
-// FLUXO DE REDEFINIÇÃO DE SENHA (APÓS PRIMEIRO ACESSO / SOB DEMANDA)
+// FLUXO DE REDEFINIÇÃO DE SENHA (VIA ENCAMINHAMENTO DE LINK POR E-MAIL)
 // ==========================================================================
 let isResetPasswordLoggedInMode = false;
+let currentResetTokenActive = "";
 
 function openResetPasswordModal(isLoggedIn = false) {
   isResetPasswordLoggedInMode = isLoggedIn;
@@ -3093,11 +3107,19 @@ function openResetPasswordModal(isLoggedIn = false) {
   if (firstAccessOverlay) firstAccessOverlay.style.display = "none";
   if (!isLoggedIn && authOverlay) authOverlay.style.display = "none";
 
+  // Exibir Etapa 1 (Solicitação de e-mail) e ocultar demais etapas
+  const stepRequest = document.getElementById("reset-step-request");
+  const stepSent = document.getElementById("reset-step-sent");
+  const stepNewPass = document.getElementById("reset-step-newpass");
+  if (stepRequest) stepRequest.style.display = "block";
+  if (stepSent) stepSent.style.display = "none";
+  if (stepNewPass) stepNewPass.style.display = "none";
+
   const identifierInput = document.getElementById("input-reset-identifier");
-  const currentPassInput = document.getElementById("input-reset-current-pass");
-  const newPassInput = document.getElementById("input-reset-new-pass");
-  const confirmPassInput = document.getElementById("input-reset-confirm-pass");
-  const errorAlert = document.getElementById("reset-password-error");
+  const requestError = document.getElementById("request-reset-error");
+  const passError = document.getElementById("reset-password-error");
+  if (requestError) requestError.style.display = "none";
+  if (passError) passError.style.display = "none";
 
   if (isLoggedIn && AppState.currentUser) {
     if (identifierInput) {
@@ -3114,12 +3136,6 @@ function openResetPasswordModal(isLoggedIn = false) {
     }
   }
 
-  if (currentPassInput) currentPassInput.value = "";
-  if (newPassInput) newPassInput.value = "";
-  if (confirmPassInput) confirmPassInput.value = "";
-  if (errorAlert) errorAlert.style.display = "none";
-
-  updateResetPasswordStrengthUI();
   overlay.style.display = "flex";
 }
 
@@ -3134,12 +3150,94 @@ function closeResetPasswordModal() {
   }
 }
 
+function handleRequestResetEmailSubmit(e) {
+  e.preventDefault();
+  const identifier = document.getElementById("input-reset-identifier")?.value;
+  const errorAlert = document.getElementById("request-reset-error");
+
+  const result = AuthManager.requestPasswordResetByEmail(identifier);
+
+  if (result.success) {
+    if (errorAlert) errorAlert.style.display = "none";
+    currentResetTokenActive = result.token;
+
+    // Atualizar dados na tela de confirmação (Etapa 2)
+    const emailDisplay = document.getElementById("reset-sent-email-display");
+    const userNameDisplay = document.getElementById("reset-sent-user-name");
+    if (emailDisplay) emailDisplay.textContent = result.email;
+    if (userNameDisplay) userNameDisplay.textContent = `Colaborador: ${result.user.nome} • Login: ${result.user.username}`;
+
+    // Alternar para Etapa 2
+    const stepRequest = document.getElementById("reset-step-request");
+    const stepSent = document.getElementById("reset-step-sent");
+    const stepNewPass = document.getElementById("reset-step-newpass");
+    if (stepRequest) stepRequest.style.display = "none";
+    if (stepSent) stepSent.style.display = "block";
+    if (stepNewPass) stepNewPass.style.display = "none";
+
+    showToast(`✉️ Link de redefinição encaminhado para ${result.email}!`);
+  } else {
+    if (errorAlert) {
+      errorAlert.textContent = `⚠️ ${result.message || "Erro ao solicitar redefinição."}`;
+      errorAlert.style.display = "block";
+    }
+  }
+}
+
+function handleOpenEmailResetLinkClick() {
+  if (!currentResetTokenActive) return;
+  openResetPasswordTokenModal(currentResetTokenActive);
+}
+
+function openResetPasswordTokenModal(token, preloadedUser = null) {
+  const result = AuthManager.validateResetToken(token);
+  if (!result.success) {
+    showToast(`⚠️ ${result.message || "Link inválido ou expirado."}`);
+    openResetPasswordModal(false);
+    return;
+  }
+
+  currentResetTokenActive = token;
+  const user = result.user || preloadedUser;
+
+  const overlay = document.getElementById("modal-reset-password");
+  const authOverlay = document.getElementById("auth-portal-overlay");
+  const firstAccessOverlay = document.getElementById("modal-first-access-password");
+
+  if (firstAccessOverlay) firstAccessOverlay.style.display = "none";
+  if (authOverlay) authOverlay.style.display = "none";
+
+  // Alternar para Etapa 3 (Definição de Nova Senha)
+  const stepRequest = document.getElementById("reset-step-request");
+  const stepSent = document.getElementById("reset-step-sent");
+  const stepNewPass = document.getElementById("reset-step-newpass");
+  if (stepRequest) stepRequest.style.display = "none";
+  if (stepSent) stepSent.style.display = "none";
+  if (stepNewPass) stepNewPass.style.display = "block";
+
+  const targetName = document.getElementById("reset-target-user-name");
+  const targetEmail = document.getElementById("reset-target-user-email");
+  const tokenInput = document.getElementById("input-reset-token");
+  const newPassInput = document.getElementById("input-reset-new-pass");
+  const confirmPassInput = document.getElementById("input-reset-confirm-pass");
+  const errorAlert = document.getElementById("reset-password-error");
+
+  if (targetName) targetName.textContent = user.nome || user.username;
+  if (targetEmail) targetEmail.textContent = user.email || `${user.username}@tkelevator.com`;
+  if (tokenInput) tokenInput.value = token;
+  if (newPassInput) newPassInput.value = "";
+  if (confirmPassInput) confirmPassInput.value = "";
+  if (errorAlert) errorAlert.style.display = "none";
+
+  updateResetPasswordStrengthUI();
+  if (overlay) overlay.style.display = "flex";
+}
+
 function updateResetPasswordStrengthUI() {
-  const currentPass = document.getElementById("input-reset-current-pass")?.value || "";
   const newPass = document.getElementById("input-reset-new-pass")?.value || "";
   const confirmPass = document.getElementById("input-reset-confirm-pass")?.value || "";
 
-  const policy = AuthManager.validatePasswordPolicy(newPass, currentPass);
+  const policy = AuthManager.validatePasswordPolicy(newPass);
 
   const ruleLength = document.getElementById("reset-rule-length");
   const ruleAlphanumeric = document.getElementById("reset-rule-alphanumeric");
@@ -3188,13 +3286,12 @@ function updateResetPasswordStrengthUI() {
 
 function handleResetPasswordSubmit(e) {
   e.preventDefault();
-  const identifier = document.getElementById("input-reset-identifier")?.value;
-  const currentPass = document.getElementById("input-reset-current-pass")?.value;
+  const token = document.getElementById("input-reset-token")?.value || currentResetTokenActive;
   const newPass = document.getElementById("input-reset-new-pass")?.value;
   const confirmPass = document.getElementById("input-reset-confirm-pass")?.value;
   const errorAlert = document.getElementById("reset-password-error");
 
-  const result = AuthManager.resetPassword(identifier, currentPass, newPass, confirmPass);
+  const result = AuthManager.resetPasswordWithToken(token, newPass, confirmPass);
 
   if (result.success) {
     if (errorAlert) errorAlert.style.display = "none";
@@ -3854,6 +3951,9 @@ function handleUploadUsersSubmit(e) {
 if (typeof window !== "undefined") {
   window.openFirstAccessModal = openFirstAccessModal;
   window.closeFirstAccessModal = closeFirstAccessModal;
+  window.openResetPasswordModal = openResetPasswordModal;
+  window.closeResetPasswordModal = closeResetPasswordModal;
+  window.openResetPasswordTokenModal = openResetPasswordTokenModal;
   window.openUserManagementModal = openUserManagementModal;
   window.closeUserManagementModal = closeUserManagementModal;
   window.renderUserManagementTable = renderUserManagementTable;
