@@ -14,3 +14,7 @@ node_modules/
 .idea/
 projeto-tke/
 
+# Environment Variables
+.env
+.env.*
+Projeto TKE/.env

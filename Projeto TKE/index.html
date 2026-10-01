@@ -195,7 +195,7 @@
         <div class="master-hero-info">
           <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
             <span class="badge badge-master">🛡️ PERFIL GESTÃO / ENGENHARIA & PCM</span>
-            <span class="badge badge-neutral" style="font-family: monospace; font-weight: 700; color: var(--accent-cyan);">🆔 Matrícula PCM: 10001</span>
+            <span class="badge badge-neutral" style="font-family: monospace; font-weight: 700; color: var(--accent-cyan);">🆔 Matrícula PCM: 55002022</span>
           </div>
           <h2 class="mt-1" style="font-size: 24px;">Gestor Master: <span style="color: var(--accent-cyan);">Engenharia & Confiabilidade</span></h2>
           <p class="text-muted text-sm mb-2">Visão consolidada da operação, métricas de confiabilidade da equipe e auditoria de planos de ação preventiva e corretiva.</p>
@@ -1011,189 +1011,7 @@
     </div>
   </div>
 
-  <!-- ==================================================================== -->
-  <!-- ==================================================================== -->
-  <!-- MODAL: REDEFINIÇÃO DE SENHA DO USUÁRIO (ENCAMINHAMENTO POR E-MAIL)    -->
-  <!-- ==================================================================== -->
-  <div id="modal-reset-password" class="auth-overlay first-access-overlay" style="display: none;">
-    <div class="auth-card first-access-card" style="max-width: 520px;">
-      
-      <!-- ETAPA 1: SOLICITAÇÃO DO LINK POR E-MAIL -->
-      <div id="reset-step-request" class="reset-step-container">
-        <div class="auth-header">
-          <div class="tke-logo-box auth-logo">
-            <span class="tke-brand-text">PLANO</span>
-            <div class="tke-slogan">365</div>
-          </div>
-          <div class="first-access-badge-pill" style="background: rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.5); color: var(--accent-cyan);">
-            📧 RECUPERAÇÃO DE SENHA
-          </div>
-          <h2 class="auth-title">Redefinir Senha de Acesso</h2>
-          <p class="auth-subtitle">Informe seu usuário, e-mail cadastrado ou matrícula corporativa para enviarmos o link seguro de redefinição.</p>
-        </div>
 
-        <form id="form-request-reset-email" class="auth-form">
-          <div class="form-group">
-            <label for="input-reset-identifier">Identificação / Login (Usuário, E-mail ou Matrícula): <span class="required-star">*</span></label>
-            <div class="input-with-icon">
-              <span class="input-icon">👤</span>
-              <input type="text" id="input-reset-identifier" class="form-control" placeholder="ex: douglas.pereira2 ou seu.email@tkelevator.com" required autocomplete="username">
-            </div>
-            <small class="form-hint" style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: block;">
-              🔒 O link seguro com token de validação será encaminhado diretamente ao seu e-mail cadastrado.
-            </small>
-          </div>
-
-          <div id="request-reset-error" class="auth-error" style="display: none;"></div>
-
-          <button type="submit" id="btn-submit-request-reset" class="btn btn-primary auth-submit-btn">
-            ✉️ Encaminhar Link para o E-mail Cadastrado
-          </button>
-        </form>
-
-        <div class="auth-footer-notes">
-          <button type="button" class="btn-link-subtle" onclick="closeResetPasswordModal()">
-            ← Cancelar e Voltar para a Tela de Login
-          </button>
-        </div>
-      </div>
-
-      <!-- ETAPA 2: LINK ENVIADO COM SUCESSO -->
-      <div id="reset-step-sent" class="reset-step-container" style="display: none;">
-        <div class="auth-header">
-          <div class="tke-logo-box auth-logo">
-            <span class="tke-brand-text">PLANO</span>
-            <div class="tke-slogan">365</div>
-          </div>
-          <div class="first-access-badge-pill" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.5); color: #10b981;">
-            ✅ LINK ENCAMINHADO
-          </div>
-          <h2 class="auth-title">Verifique seu E-mail</h2>
-          <p class="auth-subtitle">Um link seguro de redefinição foi encaminhado com sucesso para:</p>
-        </div>
-
-        <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; text-align: center;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Endereço de E-mail Cadastrado:</div>
-          <div id="reset-sent-email-display" style="font-size: 15px; font-weight: 700; color: var(--accent-cyan); word-break: break-all;">
-            usuario@tkelevator.com
-          </div>
-          <div id="reset-sent-user-name" style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-            Colaborador: Douglas Pereira
-          </div>
-        </div>
-
-        <!-- Instruções de Acesso ao E-mail -->
-        <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 18px; text-align: left;">
-          <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
-            <span style="font-size: 18px;">✉️</span>
-            <div>
-              <strong style="font-size: 12.5px; color: var(--text-primary); display: block; margin-bottom: 3px;">Acesse sua caixa de entrada</strong>
-              <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.45; margin: 0;">
-                Abra a mensagem recebida com o assunto <strong>[PLANO 365] Link Seguro para Redefinição de Senha</strong> e clique no link para cadastrar sua nova senha.
-              </p>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
-            <span>⏱️ Validade do link: <strong>30 minutos</strong></span>
-            <span>•</span>
-            <span>🔒 Uso único e intransferível</span>
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
-          <a id="btn-open-webmail" href="https://outlook.office.com/mail/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 10px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;">
-            📬 Abrir E-mail Corporativo (Outlook / Webmail)
-          </a>
-          <button type="button" id="btn-copy-reset-link" class="btn btn-outline" style="padding: 8px 12px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-            📋 Copiar Link de Redefinição
-          </button>
-        </div>
-
-        <div class="auth-footer-notes">
-          <button type="button" class="btn-link-subtle" onclick="closeResetPasswordModal()">
-            ← Voltar para a Tela de Login
-          </button>
-        </div>
-      </div>
-
-      <!-- ETAPA 3: DEFINIÇÃO DA NOVA SENHA (VALIDADA POR TOKEN) -->
-      <div id="reset-step-newpass" class="reset-step-container" style="display: none;">
-        <div class="auth-header">
-          <div class="tke-logo-box auth-logo">
-            <span class="tke-brand-text">PLANO</span>
-            <div class="tke-slogan">365</div>
-          </div>
-          <div class="first-access-badge-pill" style="background: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.5); color: #c084fc;">
-            🔒 NOVA SENHA
-          </div>
-          <h2 class="auth-title">Cadastrar Nova Senha</h2>
-          <p class="auth-subtitle">Link validado para <strong id="reset-target-user-name" style="color: var(--text-primary);">Colaborador</strong> (<span id="reset-target-user-email" style="color: var(--accent-cyan);">email@tkelevator.com</span>)</p>
-        </div>
-
-        <form id="form-reset-password" class="auth-form">
-          <input type="hidden" id="input-reset-token" value="">
-
-          <div class="form-group">
-            <label for="input-reset-new-pass">Nova Senha: <span class="required-star">*</span></label>
-            <div class="input-with-icon password-wrapper">
-              <span class="input-icon">🔒</span>
-              <input type="password" id="input-reset-new-pass" class="form-control" placeholder="Digite a nova senha (mínimo 8 caracteres)" required autocomplete="new-password">
-              <button type="button" class="btn-toggle-pass" data-target="input-reset-new-pass" title="Mostrar/Ocultar Senha">👁️</button>
-            </div>
-            
-            <!-- Indicador e Barra de Força da Senha -->
-            <div class="password-strength-container">
-              <div class="strength-bar-track">
-                <div id="reset-password-strength-bar" class="strength-bar-fill"></div>
-              </div>
-              <span id="reset-password-strength-text" class="strength-text">Força: -</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="input-reset-confirm-pass">Confirmar Nova Senha: <span class="required-star">*</span></label>
-            <div class="input-with-icon password-wrapper">
-              <span class="input-icon">✅</span>
-              <input type="password" id="input-reset-confirm-pass" class="form-control" placeholder="Repita exatamente a nova senha" required autocomplete="new-password">
-              <button type="button" class="btn-toggle-pass" data-target="input-reset-confirm-pass" title="Mostrar/Ocultar Senha">👁️</button>
-            </div>
-          </div>
-
-          <!-- Critérios de Validação -->
-          <div class="password-rules-box">
-            <div class="rules-title">Critérios de Validação:</div>
-            <ul class="rules-list">
-              <li id="reset-rule-length" class="rule-item invalid">
-                <span class="rule-icon">⚪</span> Mínimo de 8 caracteres
-              </li>
-              <li id="reset-rule-alphanumeric" class="rule-item invalid">
-                <span class="rule-icon">⚪</span> Conter letras e números
-              </li>
-              <li id="reset-rule-different" class="rule-item invalid">
-                <span class="rule-icon">⚪</span> Diferente de senhas genéricas
-              </li>
-              <li id="reset-rule-match" class="rule-item invalid">
-                <span class="rule-icon">⚪</span> Confirmação de senha idêntica
-              </li>
-            </ul>
-          </div>
-
-          <div id="reset-password-error" class="auth-error" style="display: none;"></div>
-
-          <button type="submit" id="btn-submit-reset-password" class="btn btn-primary auth-submit-btn">
-            💾 Gravar Nova Senha & Atualizar
-          </button>
-        </form>
-
-        <div class="auth-footer-notes">
-          <button type="button" class="btn-link-subtle" onclick="closeResetPasswordModal()">
-            ← Cancelar e Voltar para Login
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
   <!-- ==================================================================== -->
   <!-- MODAL: GESTÃO DE USUÁRIOS E CONTROLE DE ACESSOS (PERFIL SUPERVISOR)  -->
@@ -1319,7 +1137,7 @@
 
           <div class="form-group">
             <label for="input-user-email">E-mail Corporativo / Login: <span class="required-star">*</span></label>
-            <input type="email" id="input-user-email" class="form-control" placeholder="ex: douglas.bispo@operacao365.com" required>
+            <input type="email" id="input-user-email" class="form-control" placeholder="ex: douglas.bispo@tkelevator.com" required>
           </div>
         </div>
 
@@ -1440,7 +1258,7 @@
 
         <div class="form-group">
           <pre style="background: rgba(0,0,0,0.4); padding: 8px 10px; border-radius: 6px; font-size: 11px; color: var(--accent-cyan); margin-bottom: 8px; overflow-x: auto; white-space: pre-wrap;">Matrícula;Nome Completo;Cargo;E-mail;Perfil;Nível;Setor;Filial</pre>
-          <textarea id="textarea-upload-users-content" class="form-control" style="min-height: 140px; font-family: monospace; font-size: 11px;" placeholder="10210;Carlos Silva;Técnico de Manutenção - Setor 2;carlos.silva@operacao365.com;TECNICO;G2;Setor 2;5003 / 5070&#10;10211;Mariana Santos;Supervisora de Operações;mariana.santos@operacao365.com;MASTER;Supervisão;Zona 2 - Norte;5003 / 5070"></textarea>
+          <textarea id="textarea-upload-users-content" class="form-control" style="min-height: 140px; font-family: monospace; font-size: 11px;" placeholder="10210;Carlos Silva;Técnico de Manutenção - Setor 2;carlos.silva@tkelevator.com;TECNICO;G2;Setor 2;5003 / 5070&#10;10211;Mariana Santos;Supervisora de Operações;mariana.santos@tkelevator.com;MASTER;Supervisão;Zona 2 - Norte;5003 / 5070"></textarea>
         </div>
 
         <div class="users-mgmt-footer-note" style="margin-top: 6px; margin-bottom: 16px;">
@@ -1454,6 +1272,241 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: PRIMEIRO ACESSO OBRIGATÓRIO (TROCA DE SENHA)                  -->
+  <!-- ==================================================================== -->
+  <div id="modal-first-access-password" class="modal-overlay">
+    <div class="modal-content modal-auth-flow-content">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-badge-role" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border-color: rgba(245, 158, 11, 0.4);">PRIMEIRO ACESSO OBRIGATÓRIO</span>
+          <h2 class="modal-title">🛡️ Cadastrar Nova Senha Pessoal</h2>
+          <p class="modal-subtitle">Conforme as diretrizes de segurança da TKE, substitua a senha provisória padrão antes de acessar o sistema.</p>
+        </div>
+        <button class="modal-close" onclick="closeFirstAccessModal()">&times;</button>
+      </div>
+
+      <form id="form-first-access-reset" class="user-edit-form">
+        <div class="form-group">
+          <label for="first-access-username">Usuário / Identificador:</label>
+          <input type="text" id="first-access-username" class="form-control" readonly style="opacity: 0.85; background: rgba(0,0,0,0.25);">
+        </div>
+
+        <div class="form-group">
+          <label for="first-access-temp-pass">Senha Provisória Atual:</label>
+          <input type="password" id="first-access-temp-pass" class="form-control" placeholder="Digite a senha provisória recebida" required>
+        </div>
+
+        <div class="form-group">
+          <label for="first-access-new-pass">Nova Senha Definitiva:</label>
+          <div class="input-with-icon password-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="first-access-new-pass" class="form-control" placeholder="Mínimo 8 caracteres (letras e números)" required>
+            <button type="button" class="btn-toggle-pass" data-target="first-access-new-pass">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="first-access-confirm-pass">Confirmar Nova Senha:</label>
+          <div class="input-with-icon password-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="first-access-confirm-pass" class="form-control" placeholder="Repita a nova senha exatamente" required>
+            <button type="button" class="btn-toggle-pass" data-target="first-access-confirm-pass">👁️</button>
+          </div>
+        </div>
+
+        <!-- Barra de Força da Senha -->
+        <div class="password-strength-container" style="margin: 10px 0 14px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+            <span style="color: var(--text-secondary);">Força da Senha:</span>
+            <span id="password-strength-text" style="font-weight: 600; color: var(--accent-cyan);">-</span>
+          </div>
+          <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+            <div id="password-strength-bar" style="height: 100%; width: 0%; background: var(--accent-rose); transition: width 0.3s ease, background-color 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Checklist de Regras -->
+        <div class="password-rules-box" style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; margin-bottom: 14px; font-size: 11.5px;">
+          <div id="rule-length" class="rule-item invalid"><span class="rule-icon">⚪</span> Mínimo de 8 caracteres</div>
+          <div id="rule-alphanumeric" class="rule-item invalid"><span class="rule-icon">⚪</span> Conter letras e números</div>
+          <div id="rule-different" class="rule-item invalid"><span class="rule-icon">⚪</span> Diferente da senha provisória padrão</div>
+          <div id="rule-match" class="rule-item invalid"><span class="rule-icon">⚪</span> Confirmação de senha idêntica</div>
+        </div>
+
+        <div id="first-access-error" class="auth-error" style="display: none; margin-bottom: 12px;"></div>
+
+        <div class="modal-footer" style="padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" id="btn-cancel-first-access" class="btn btn-outline" onclick="closeFirstAccessModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <span>💾 Confirmar e Acessar Sistema</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: REDEFINIÇÃO DE SENHA COM TOKEN & NEON POSTGRESQL             -->
+  <!-- ==================================================================== -->
+  <div id="modal-reset-password" class="modal-overlay">
+    <div class="modal-content modal-auth-flow-content">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-badge-role" style="background: rgba(56, 189, 248, 0.2); color: var(--accent-cyan); border-color: rgba(56, 189, 248, 0.4);">
+            🗄️ NEON POSTGRES TOKEN ENGINE
+          </span>
+          <h2 class="modal-title">🔑 Redefinição Segura de Senha</h2>
+          <p class="modal-subtitle">Envio e validação de tokens criptográficos e código OTP integrados ao Neon.</p>
+        </div>
+        <button class="modal-close" onclick="closeResetPasswordModal()">&times;</button>
+      </div>
+
+      <!-- ETAPA 1: SOLICITAR TOKEN / E-MAIL -->
+      <div id="reset-step-request">
+        <form id="form-request-reset-email" class="user-edit-form">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Informe seu <strong>usuário</strong>, <strong>e-mail cadastrado</strong> ou <strong>matrícula</strong> para gerar um token seguro de redefinição de uso único.
+          </p>
+
+          <div class="form-group">
+            <label for="input-reset-identifier">Identificador (Usuário, E-mail ou Matrícula): <span class="required-star">*</span></label>
+            <div class="input-with-icon">
+              <span class="input-icon">👤</span>
+              <input type="text" id="input-reset-identifier" class="form-control" placeholder="ex: douglas.pereira2, master ou 10101" required autocomplete="username">
+            </div>
+          </div>
+
+          <div id="request-reset-error" class="auth-error" style="display: none; margin-bottom: 12px;"></div>
+
+          <div class="modal-footer" style="padding-top: 12px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" class="btn btn-outline" onclick="closeResetPasswordModal()">Voltar</button>
+            <button type="submit" class="btn btn-primary">
+              <span>⚡ Gerar Token & Solicitar Link</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ETAPA 2: STATUS DO ENVIO DE LINK / TOKEN NO NEON -->
+      <div id="reset-step-sent" style="display: none;">
+        <div style="text-align: center; padding: 10px 0 16px;">
+          <div id="reset-sent-icon" style="font-size: 42px; margin-bottom: 8px;">✉️</div>
+          <h3 id="reset-sent-title" style="font-size: 18px; margin-bottom: 6px; color: var(--accent-cyan);">Link Enviado para o E-mail Cadastrado!</h3>
+          
+          <div id="reset-sent-status-banner" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; text-align: left; font-size: 12.5px; line-height: 1.5; color: var(--text-secondary);">
+            <div id="reset-sent-status-text">
+              As instruções e o link seguro de acesso foram direcionados <strong>exclusivamente para a caixa de entrada</strong> do seu e-mail corporativo cadastrado.
+            </div>
+          </div>
+          
+          <div style="background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; margin-bottom: 16px; text-align: left;">
+            <div id="reset-sent-user-name" style="font-weight: 600; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">Colaborador: -</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">
+              Caixa de Entrada / E-mail: <strong id="reset-sent-email-display" style="color: var(--accent-cyan);">-</strong>
+            </div>
+
+            <div id="reset-sent-note" style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid var(--accent-cyan); border-radius: 4px; padding: 10px 12px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.45;">
+              🔒 <strong>Segurança TKE:</strong> Por política de proteção e privacidade, a redefinição é gerada e autorizada <strong>através do link seguro de uso único</strong>.
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px;">
+              <span>⏱️ Validade: <strong>30 minutos</strong></span>
+              <span>🛡️ Uso único e intransferível</span>
+            </div>
+          </div>
+
+          <!-- Ações Quando E-mail Enviado com Sucesso -->
+          <div id="reset-sent-email-actions" style="display: flex; flex-direction: column; gap: 10px;">
+            <a id="btn-open-preview-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="display: none; width: 100%; font-size: 13.5px; padding: 12px; font-weight: 700; text-decoration: none; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #059669; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
+              📬 Visualizar Mensagem de E-mail Recebida
+            </a>
+            <a id="btn-open-webmail-link" href="https://outlook.office.com/mail/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width: 100%; font-size: 13.5px; padding: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);">
+              📬 Abrir Caixa de Entrada no Outlook (Webmail)
+            </a>
+            <button type="button" class="btn btn-outline" onclick="closeResetPasswordModal()" style="font-size: 12px;">
+              ← Voltar para a Tela de Login
+            </button>
+          </div>
+
+          <!-- Ações Quando Envio de E-mail Pendente de Configuração SMTP no .env -->
+          <div id="reset-fallback-actions" style="display: none; flex-direction: column; gap: 8px;">
+            <button type="button" id="btn-open-email-reset-link" class="btn btn-primary" style="width: 100%; font-size: 13.5px; padding: 11px; font-weight: 700;">
+              <span>⚡ Redefinir Senha Agora (Neste Navegador)</span>
+            </button>
+            <button type="button" id="btn-copy-reset-link" class="btn btn-outline" style="font-size: 12px;">
+              📋 Copiar Link Seguro de Recuperação
+            </button>
+            <button type="button" class="btn-link-subtle" onclick="closeResetPasswordModal()" style="font-size: 11.5px; margin-top: 4px;">
+              ← Voltar para a Tela de Login
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 3: DIGITAR NOVA SENHA (VALIDAÇÃO DE TOKEN NO NEON) -->
+      <div id="reset-step-newpass" style="display: none;">
+        <form id="form-reset-password" class="user-edit-form">
+          <div style="background: rgba(0,0,0,0.25); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 12px;">
+            <div>👤 Colaborador: <strong id="reset-target-user-name" style="color: var(--accent-cyan);">-</strong></div>
+            <div style="color: var(--text-secondary); font-size: 11px;">E-mail: <span id="reset-target-user-email">-</span></div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-reset-token">Token ou Código OTP:</label>
+            <input type="text" id="input-reset-token" class="form-control" placeholder="Código de verificação ou token" required style="font-family: monospace; font-size: 11.5px;">
+          </div>
+
+          <div class="form-group">
+            <label for="input-reset-new-pass">Nova Senha Definitiva:</label>
+            <div class="input-with-icon password-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="input-reset-new-pass" class="form-control" placeholder="Mínimo 8 caracteres (letras e números)" required autocomplete="new-password">
+              <button type="button" class="btn-toggle-pass" data-target="input-reset-new-pass">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-reset-confirm-pass">Confirmar Nova Senha:</label>
+            <div class="input-with-icon password-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="input-reset-confirm-pass" class="form-control" placeholder="Repita a nova senha exatamente" required autocomplete="new-password">
+              <button type="button" class="btn-toggle-pass" data-target="input-reset-confirm-pass">👁️</button>
+            </div>
+          </div>
+
+          <!-- Barra de Força -->
+          <div class="password-strength-container" style="margin: 8px 0 12px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+              <span style="color: var(--text-secondary);">Força da Senha:</span>
+              <span id="reset-password-strength-text" style="font-weight: 600; color: var(--accent-cyan);">-</span>
+            </div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+              <div id="reset-password-strength-bar" style="height: 100%; width: 0%; background: var(--accent-rose); transition: width 0.3s ease, background-color 0.3s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Checklist de Regras -->
+          <div class="password-rules-box" style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 10px; margin-bottom: 12px; font-size: 11px;">
+            <div id="reset-rule-length" class="rule-item invalid"><span class="rule-icon">⚪</span> Mínimo de 8 caracteres</div>
+            <div id="reset-rule-alphanumeric" class="rule-item invalid"><span class="rule-icon">⚪</span> Conter letras e números</div>
+            <div id="reset-rule-different" class="rule-item invalid"><span class="rule-icon">⚪</span> Diferente de senhas genéricas</div>
+            <div id="reset-rule-match" class="rule-item invalid"><span class="rule-icon">⚪</span> Confirmação de senha idêntica</div>
+          </div>
+
+          <div id="reset-password-error" class="auth-error" style="display: none; margin-bottom: 12px;"></div>
+
+          <div class="modal-footer" style="padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 8px;">
+            <button type="button" class="btn btn-outline" onclick="closeResetPasswordModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <span>💾 Salvar Nova Senha no Neon</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

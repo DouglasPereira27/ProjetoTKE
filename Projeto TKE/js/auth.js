@@ -109,7 +109,7 @@ const TKE_INITIAL_USERS = [
     id: "usr_master",
     username: "master",
     email: "douglas.pereira2@tkelevator.com",
-    matricula: "10001",
+    matricula: "55002022",
     nome: "Gestor & Administrador Master",
     role: "MASTER",
     grupoNivel: "Gestão / PCM",
@@ -127,7 +127,7 @@ const TKE_INITIAL_USERS = [
     id: "usr_douglas_supervisor",
     username: "douglas.pereira2",
     email: "douglas.pereira2@tkelevator.com",
-    matricula: "6",
+    matricula: "55002022",
     nome: "Douglas Pereira",
     role: "MASTER",
     grupoNivel: "Supervisão",
@@ -149,8 +149,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_lucas_rodrigues",
     username: "lucas.rodrigues",
-    email: "lucas.rodrigues@operacao365.com",
-    matricula: "10101",
+    email: "lucas.baccega@tkelevator.com",
+    matricula: "55019845",
     nome: "Lucas Rodrigues Baccega",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -168,8 +168,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_elton_gomes",
     username: "elton.gomes",
-    email: "elton.gomes@operacao365.com",
-    matricula: "10102",
+    email: "elton.gomes@tkelevator.com",
+    matricula: "55013015",
     nome: "Elton Gomes",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -187,8 +187,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_willian_wallace",
     username: "willian.wallace",
-    email: "willian.wallace@operacao365.com",
-    matricula: "10103",
+    email: "willian.silva@tkelevator.com",
+    matricula: "55021021",
     nome: "Willian Wallace da Silva",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -206,8 +206,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_allison_oliveira",
     username: "allison.oliveira",
-    email: "allison.oliveira@operacao365.com",
-    matricula: "10104",
+    email: "allison.carvalho@tkelevator.com",
+    matricula: "55017869",
     nome: "Allison Oliveira Carvalho",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -227,8 +227,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_douglas_bispo",
     username: "douglas.bispo",
-    email: "douglas.bispo@operacao365.com",
-    matricula: "10205",
+    email: "douglas.bispo@tkelevator.com",
+    matricula: "55008126",
     nome: "Douglas Geraldin Bispo",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -246,8 +246,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_jose_gomes",
     username: "jose.gomes",
-    email: "jose.gomes@operacao365.com",
-    matricula: "10206",
+    email: "jose.gomes4@tkelevator.com",
+    matricula: "55004134",
     nome: "Jose Gomes de Miranda",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -265,8 +265,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_alisson_terencio",
     username: "alisson.terencio",
-    email: "alisson.terencio@operacao365.com",
-    matricula: "10207",
+    email: "alisson.santos@tkelevator.com",
+    matricula: "55021335",
     nome: "Alisson Terencio Santos",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -284,8 +284,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_gilmario_manoel",
     username: "gilmario.manoel",
-    email: "gilmario.manoel@operacao365.com",
-    matricula: "10208",
+    email: "gilmario.alves@tkelevator.com",
+    matricula: "55013900",
     nome: "Gilmario Manoel Alves",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -305,8 +305,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_anderson_lemos",
     username: "anderson.lemos",
-    email: "anderson.lemos@operacao365.com",
-    matricula: "10309",
+    email: "anderson.lemos@tkelevator.com",
+    matricula: "55011369",
     nome: "Anderson Lemos",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -324,8 +324,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_tiago_alves",
     username: "tiago.alves",
-    email: "tiago.alves@operacao365.com",
-    matricula: "10310",
+    email: "tiago.barboza@tkelevator.com",
+    matricula: "55012871",
     nome: "Tiago Alves",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -343,8 +343,8 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_alexandre_morais",
     username: "alexandre.morais",
-    email: "alexandre.morais@operacao365.com",
-    matricula: "10311",
+    email: "alexandre.morais@tkelevator.com",
+    matricula: "55018997",
     nome: "Alexandre Morais",
     role: "TECNICO",
     grupoNivel: "G2",
@@ -364,7 +364,7 @@ const TKE_INITIAL_USERS = [
   {
     id: "usr_rodrigo_mendonca",
     username: "rodrigo.mendonca",
-    email: "rodrigo.mendonca@operacao365.com",
+    email: "rodrigo.mendonca@tkelevator.com",
     matricula: "50789",
     nome: "Rodrigo Mendonça",
     role: "TECNICO",
@@ -391,6 +391,41 @@ const TKE_AUTH_USERS = TKE_INITIAL_USERS;
 const UserManager = {
   STORAGE_KEY: "PLANO365_USERS_DATA_V1",
 
+  // Mapeamento Oficial de E-mails Corporativos TKE
+  TKE_EMAIL_MAP: {
+    "usr_master": "douglas.pereira2@tkelevator.com",
+    "usr_douglas_supervisor": "douglas.pereira2@tkelevator.com",
+    "usr_alexandre_morais": "alexandre.morais@tkelevator.com",
+    "usr_allison_oliveira": "allison.carvalho@tkelevator.com",
+    "usr_alisson_terencio": "alisson.santos@tkelevator.com",
+    "usr_anderson_lemos": "anderson.lemos@tkelevator.com",
+    "usr_douglas_bispo": "douglas.bispo@tkelevator.com",
+    "usr_elton_gomes": "elton.gomes@tkelevator.com",
+    "usr_gilmario_manoel": "gilmario.alves@tkelevator.com",
+    "usr_jose_gomes": "jose.gomes4@tkelevator.com",
+    "usr_lucas_rodrigues": "lucas.baccega@tkelevator.com",
+    "usr_rodrigo_mendonca": "rodrigo.mendonca@tkelevator.com",
+    "usr_tiago_alves": "tiago.barboza@tkelevator.com",
+    "usr_willian_wallace": "willian.silva@tkelevator.com"
+  },
+
+  // Mapeamento Oficial de Matrículas TKE
+  TKE_MATRICULA_MAP: {
+    "usr_master": "55002022",
+    "usr_douglas_supervisor": "55002022",
+    "usr_elton_gomes": "55013015",
+    "usr_lucas_rodrigues": "55019845",
+    "usr_allison_oliveira": "55017869",
+    "usr_willian_wallace": "55021021",
+    "usr_gilmario_manoel": "55013900",
+    "usr_alisson_terencio": "55021335",
+    "usr_douglas_bispo": "55008126",
+    "usr_jose_gomes": "55004134",
+    "usr_anderson_lemos": "55011369",
+    "usr_tiago_alves": "55012871",
+    "usr_alexandre_morais": "55018997"
+  },
+
   /**
    * Inicializa e obtém todos os usuários persistidos
    * @returns {Array<object>}
@@ -403,6 +438,18 @@ const UserManager = {
         if (Array.isArray(parsed) && parsed.length > 0) {
           let updated = false;
           parsed = parsed.map(u => {
+            // Sincronização automática para e-mails oficiais @tkelevator.com
+            if (this.TKE_EMAIL_MAP[u.id] && u.email !== this.TKE_EMAIL_MAP[u.id]) {
+              u.email = this.TKE_EMAIL_MAP[u.id];
+              updated = true;
+            }
+
+            // Sincronização automática para matrículas oficiais TKE
+            if (this.TKE_MATRICULA_MAP[u.id] && u.matricula !== this.TKE_MATRICULA_MAP[u.id]) {
+              u.matricula = this.TKE_MATRICULA_MAP[u.id];
+              updated = true;
+            }
+
             // Se for o contato Douglas Pereira ou o antigo supervisor
             if (
               u.nome === "Douglas Pereira" ||
@@ -421,7 +468,7 @@ const UserManager = {
                 id: "usr_douglas_supervisor",
                 username: "douglas.pereira2",
                 email: "douglas.pereira2@tkelevator.com",
-                matricula: (u.matricula && String(u.matricula) !== "10022") ? String(u.matricula) : "6",
+                matricula: "55002022",
                 nome: "Douglas Pereira",
                 role: "MASTER",
                 grupoNivel: "Supervisão",
@@ -788,11 +835,130 @@ const UserManager = {
   },
 
   /**
+   * Constrói link de composição direta no Gmail Web (com destinatário, assunto e corpo)
+   */
+  buildGmailComposeUrl(to, subject, body) {
+    const cleanTo = (to || "").trim();
+    const cleanSubject = encodeURIComponent(subject || "");
+    const cleanBody = encodeURIComponent(body || "");
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(cleanTo)}&su=${cleanSubject}&body=${cleanBody}`;
+  },
+
+  /**
+   * Constrói link mailto para cliente de e-mail padrão
+   */
+  buildMailtoUrl(to, subject, body) {
+    const cleanTo = (to || "").trim();
+    const cleanSubject = encodeURIComponent(subject || "");
+    const cleanBody = encodeURIComponent(body || "");
+    return `mailto:${encodeURIComponent(cleanTo)}?subject=${cleanSubject}&body=${cleanBody}`;
+  },
+
+  /**
+   * Gera os dados de e-mail de recuperação de senha com link seguro para o Gmail
+   */
+  generatePasswordResetEmailData(user, token, resetUrl, destinationEmail = null) {
+    const email = destinationEmail || user.email || (user.username + "@tkelevator.com");
+    const baseUrl = (typeof window !== "undefined" && window.location.origin && window.location.origin !== "null")
+      ? (window.location.origin + window.location.pathname)
+      : "https://tke-plano365.local/";
+    
+    const subject = `[PLANO 365] Recuperação de Senha - ${user.nome || user.username}`;
+    
+    const body = 
+`Olá, ${user.nome || user.username}!
+
+Recebemos uma solicitação de recuperação de senha para a sua conta no sistema PLANO 365 (TKE Elevator).
+
+--------------------------------------------------
+DADOS DO COLABORADOR:
+• Nome: ${user.nome || user.username}
+• Usuário / Login: ${user.username}
+• Matrícula: ${user.matricula || '-'}
+• Setor / Filial: ${user.setor || 'Operacional'} (${user.filial || '5003 / 5070'})
+• E-mail: ${email}
+--------------------------------------------------
+
+🔗 LINK DIRETO PARA REDEFINIÇÃO DE SENHA:
+${resetUrl}
+
+(Token de uso único com validade de 30 minutos)
+
+Caso prefira entrar manualmente no sistema:
+• Endereço: ${baseUrl}
+• Token de Recuperação: ${token}
+
+Se você não solicitou esta redefinição, ignore este e-mail ou contate a Supervisão Técnica.
+
+Atenciosamente,
+Supervisão de Manutenção & PCM - TKE Elevator
+Sistema PLANO 365`;
+
+    return {
+      to: email,
+      subject: subject,
+      body: body,
+      gmailUrl: this.buildGmailComposeUrl(email, subject, body),
+      mailtoUrl: this.buildMailtoUrl(email, subject, body),
+      gmailInboxUrl: "https://mail.google.com/mail/u/0/#inbox"
+    };
+  },
+
+  /**
+   * Gera dados de e-mail para envio de nova senha provisória / redefinida diretamente pelo Gmail
+   */
+  generateNewPasswordEmailData(user, tempPassword = "Plano@1234", destinationEmail = null) {
+    const email = destinationEmail || user.email || (user.username + "@tkelevator.com");
+    const baseUrl = (typeof window !== "undefined" && window.location.origin && window.location.origin !== "null")
+      ? (window.location.origin + window.location.pathname)
+      : "https://tke-plano365.local/";
+    
+    const subject = `[PLANO 365] Nova Senha de Acesso e Credenciais - ${user.nome || user.username}`;
+    
+    const body = 
+`Olá, ${user.nome || user.username}!
+
+Sua senha de acesso ao sistema PLANO 365 (TKE Elevator) foi redefinida.
+
+--------------------------------------------------
+CREDENCIAS DE ACESSO:
+• Link do Sistema: ${baseUrl}
+• Usuário / Login: ${user.username}
+• Matrícula: ${user.matricula || '-'}
+• Cargo / Função: ${user.cargo || user.setor || 'Técnico de Manutenção'}
+• Filial / Unidade: ${user.filial || '5003 / 5070'}
+• Nova Senha Provisória: ${tempPassword}
+--------------------------------------------------
+
+INSTRUÇÕES DE PRIMEIRO ACESSO:
+1. Acesse o sistema pelo link: ${baseUrl}
+2. Digite seu usuário e a nova senha provisória acima.
+3. No primeiro acesso, o sistema exigirá o cadastro obrigatório de sua nova senha definitiva.
+
+Em caso de dúvidas, contate a Supervisão de Operações.
+
+Atenciosamente,
+Supervisão de Manutenção & PCM - TKE Elevator
+Sistema PLANO 365`;
+
+    return {
+      to: email,
+      subject: subject,
+      body: body,
+      tempPass: tempPassword,
+      gmailUrl: this.buildGmailComposeUrl(email, subject, body),
+      mailtoUrl: this.buildMailtoUrl(email, subject, body),
+      gmailInboxUrl: "https://mail.google.com/mail/u/0/#inbox"
+    };
+  },
+
+  /**
    * Solicita o envio de link seguro de redefinição de senha para o e-mail cadastrado
    * @param {string} identifier (username, e-mail ou matrícula)
-   * @returns {{ success: boolean, user?: object, email?: string, maskedEmail?: string, token?: string, resetUrl?: string, message?: string }}
+   * @param {string} [optionalDestinationEmail]
+   * @returns {{ success: boolean, user?: object, email?: string, maskedEmail?: string, token?: string, resetUrl?: string, gmailUrl?: string, gmailInboxUrl?: string, mailtoUrl?: string, emailData?: object, message?: string }}
    */
-  requestPasswordResetByEmail(identifier) {
+  requestPasswordResetByEmail(identifier, optionalDestinationEmail = null) {
     if (!identifier) {
       return { success: false, message: "Por favor, informe seu usuário, e-mail ou matrícula." };
     }
@@ -804,8 +970,8 @@ const UserManager = {
       return { success: false, message: "Usuário, e-mail ou matrícula não localizado no cadastro do PLANO 365." };
     }
 
-    // Garantir e-mail cadastrado
-    const email = (user.email || (user.username + "@tkelevator.com")).trim().toLowerCase();
+    // Garantir e-mail cadastrado (ou e-mail de destino informado)
+    const email = (optionalDestinationEmail || user.email || (user.username + "@tkelevator.com")).trim().toLowerCase();
 
     // Gerar token seguro de recuperação com validade de 30 minutos
     const token = "tke_rst_" + Math.random().toString(36).substring(2, 10) + "_" + Date.now().toString(36);
@@ -814,7 +980,9 @@ const UserManager = {
     const users = this.getUsers();
     const idx = users.findIndex(u => u.id === user.id);
     if (idx !== -1) {
-      users[idx].email = email;
+      if (optionalDestinationEmail) {
+        users[idx].email = email;
+      }
       users[idx].resetToken = token;
       users[idx].resetTokenExpiresAt = expiresAt;
       this.saveUsers(users);
@@ -830,8 +998,13 @@ const UserManager = {
     const maskedEmail = `${maskedName}@${domainPart}`;
 
     // Construir URL do link seguro
-    const baseUrl = window.location.origin + window.location.pathname;
-    const resetUrl = `${baseUrl}?reset_token=${encodeURIComponent(token)}`;
+    const origin = (typeof window !== "undefined" && window.location.origin && window.location.origin !== "null") ? window.location.origin : "";
+    const pathname = (typeof window !== "undefined" && window.location.pathname) ? window.location.pathname : "";
+    const resetUrl = `${origin}${pathname}?reset_token=${encodeURIComponent(token)}`;
+
+    // Gerar URLs diretas para Gmail e cliente de e-mail
+    const emailData = this.generatePasswordResetEmailData(user, token, resetUrl, email);
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     return {
       success: true,
@@ -847,9 +1020,45 @@ const UserManager = {
       email: email,
       maskedEmail: maskedEmail,
       token: token,
+      otp: otpCode,
       resetUrl: resetUrl,
-      message: `Link de redefinição encaminhado com sucesso para o e-mail ${email}.`
+      emailData: emailData,
+      gmailUrl: emailData.gmailUrl,
+      gmailInboxUrl: emailData.gmailInboxUrl,
+      mailtoUrl: emailData.mailtoUrl,
+      message: `Link de redefinição e token prontos para entrega (${email}).`
     };
+  },
+
+  /**
+   * Solicita token de recuperação conectando ao Neon PostgreSQL (com fallback local)
+   */
+  async requestPasswordResetByEmailAsync(identifier, optionalDestinationEmail = null) {
+    try {
+      const resp = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier, destinationEmail: optionalDestinationEmail })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        const emailData = this.generatePasswordResetEmailData(data.user, data.token, data.resetUrl, data.email);
+        return {
+          ...data,
+          emailData: emailData,
+          gmailUrl: emailData.gmailUrl,
+          gmailInboxUrl: emailData.gmailInboxUrl,
+          mailtoUrl: emailData.mailtoUrl
+        };
+      }
+      if (data && data.message && resp.status !== 404) {
+        // Se a API retornou erro específico
+        return data;
+      }
+    } catch (e) {
+      console.warn("Neon API offline, usando fallback local:", e);
+    }
+    return this.requestPasswordResetByEmail(identifier, optionalDestinationEmail);
   },
 
   /**
@@ -885,6 +1094,29 @@ const UserManager = {
         email: user.email
       }
     };
+  },
+
+  /**
+   * Valida token ou OTP conectando ao Neon PostgreSQL
+   */
+  async validateResetTokenAsync(token, otp = null, identifier = null) {
+    try {
+      const resp = await fetch("/api/auth/validate-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, otp, identifier })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        return data;
+      }
+      if (data && data.message) {
+        return data;
+      }
+    } catch (e) {
+      console.warn("Neon API offline, validando localmente:", e);
+    }
+    return this.validateResetToken(token);
   },
 
   /**
@@ -926,6 +1158,41 @@ const UserManager = {
       user: users[index],
       message: "Senha redefinida com sucesso! Você já pode efetuar o login com a nova senha."
     };
+  },
+
+  /**
+   * Conclui a redefinição de senha gravando no Neon PostgreSQL
+   */
+  async resetPasswordWithTokenAsync(token, newPassword, confirmPassword) {
+    try {
+      const resp = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, newPassword, confirmPassword })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        // Sincroniza localmente
+        if (data.user) {
+          const users = this.getUsers();
+          const idx = users.findIndex(u => u.id === data.user.id || u.username === data.user.username);
+          if (idx !== -1) {
+            users[idx].senha = newPassword;
+            users[idx].senhaHash = this.hashPassword(newPassword);
+            users[idx].primeiro_acesso = false;
+            users[idx].senhaProvisoria = null;
+            this.saveUsers(users);
+          }
+        }
+        return data;
+      }
+      if (data && data.message) {
+        return data;
+      }
+    } catch (e) {
+      console.warn("Neon API offline, redefinindo localmente:", e);
+    }
+    return this.resetPasswordWithToken(token, newPassword);
   }
 };
 
@@ -1182,31 +1449,62 @@ const AuthManager = {
   },
 
   /**
-   * Solicita o envio de link de redefinição para o e-mail cadastrado
+   * Constrói link de composição direta no Gmail Web (com destinatário, assunto e corpo)
+   */
+  buildGmailComposeUrl(to, subject, body) {
+    return UserManager.buildGmailComposeUrl(to, subject, body);
+  },
+
+  /**
+   * Constrói link mailto para cliente de e-mail padrão
+   */
+  buildMailtoUrl(to, subject, body) {
+    return UserManager.buildMailtoUrl(to, subject, body);
+  },
+
+  /**
+   * Gera os dados de e-mail de recuperação de senha com link seguro para o Gmail
+   */
+  generatePasswordResetEmailData(user, token, resetUrl, destinationEmail = null) {
+    return UserManager.generatePasswordResetEmailData(user, token, resetUrl, destinationEmail);
+  },
+
+  /**
+   * Gera dados de e-mail para envio de nova senha provisória / redefinida diretamente pelo Gmail
+   */
+  generateNewPasswordEmailData(user, tempPassword = "Plano@1234", destinationEmail = null) {
+    return UserManager.generateNewPasswordEmailData(user, tempPassword, destinationEmail);
+  },
+
+  /**
+   * Solicita o envio de link de redefinição para o e-mail cadastrado (Neon PostgreSQL com fallback)
    * @param {string} identifier 
-   * @returns {{ success: boolean, user?: object, email?: string, maskedEmail?: string, token?: string, resetUrl?: string, message?: string }}
+   * @param {string} [optionalDestinationEmail]
+   * @returns {Promise<{ success: boolean, user?: object, email?: string, maskedEmail?: string, token?: string, otp?: string, resetUrl?: string, gmailUrl?: string, gmailInboxUrl?: string, mailtoUrl?: string, emailData?: object, message?: string }>}
    */
-  requestPasswordResetByEmail(identifier) {
-    return UserManager.requestPasswordResetByEmail(identifier);
+  async requestPasswordResetByEmail(identifier, optionalDestinationEmail = null) {
+    return await UserManager.requestPasswordResetByEmailAsync(identifier, optionalDestinationEmail);
   },
 
   /**
-   * Valida o token recebido pelo link de e-mail
+   * Valida o token ou código OTP recebido (Neon PostgreSQL com fallback)
    * @param {string} token 
-   * @returns {{ success: boolean, user?: object, message?: string }}
+   * @param {string} [otp]
+   * @param {string} [identifier]
+   * @returns {Promise<{ success: boolean, user?: object, message?: string }>}
    */
-  validateResetToken(token) {
-    return UserManager.validateResetToken(token);
+  async validateResetToken(token, otp = null, identifier = null) {
+    return await UserManager.validateResetTokenAsync(token, otp, identifier);
   },
 
   /**
-   * Conclui a redefinição de nova senha utilizando o token de e-mail
+   * Conclui a redefinição de nova senha utilizando o token de e-mail (Neon PostgreSQL)
    * @param {string} token 
    * @param {string} newPassword 
    * @param {string} confirmPassword 
-   * @returns {{ success: boolean, user?: object, message?: string }}
+   * @returns {Promise<{ success: boolean, user?: object, message?: string }>}
    */
-  resetPasswordWithToken(token, newPassword, confirmPassword) {
+  async resetPasswordWithToken(token, newPassword, confirmPassword) {
     if (!token || !newPassword || !confirmPassword) {
       return { success: false, message: "Por favor, preencha e confirme sua nova senha." };
     }
@@ -1220,7 +1518,7 @@ const AuthManager = {
       return { success: false, message: policy.errors[0] || "A nova senha não atende aos requisitos de segurança." };
     }
 
-    return UserManager.resetPasswordWithToken(token, newPassword);
+    return await UserManager.resetPasswordWithTokenAsync(token, newPassword, confirmPassword);
   },
 
   /**

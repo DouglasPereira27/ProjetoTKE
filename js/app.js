@@ -3162,36 +3162,96 @@ function closeResetPasswordModal() {
   }
 }
 
-function handleRequestResetEmailSubmit(e) {
+async function handleRequestResetEmailSubmit(e) {
   e.preventDefault();
   const identifier = document.getElementById("input-reset-identifier")?.value;
   const errorAlert = document.getElementById("request-reset-error");
+  const submitBtn = e.target.querySelector("button[type='submit']");
+  
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = "<span>⏳ Gerando Token Seguro no Neon...</span>";
+  }
 
-  const result = AuthManager.requestPasswordResetByEmail(identifier);
+  try {
+    const result = await AuthManager.requestPasswordResetByEmail(identifier);
 
-  if (result.success) {
-    if (errorAlert) errorAlert.style.display = "none";
-    currentResetTokenActive = result.token;
+    if (result.success) {
+      if (errorAlert) errorAlert.style.display = "none";
+      currentResetTokenActive = result.token || null;
 
-    // Atualizar dados na tela de confirmação (Etapa 2)
-    const emailDisplay = document.getElementById("reset-sent-email-display");
-    const userNameDisplay = document.getElementById("reset-sent-user-name");
-    if (emailDisplay) emailDisplay.textContent = result.email;
-    if (userNameDisplay) userNameDisplay.textContent = `Colaborador: ${result.user.nome} • Login: ${result.user.username}`;
+      // Atualizar dados na tela de confirmação (Etapa 2)
+      const emailDisplay = document.getElementById("reset-sent-email-display");
+      const userNameDisplay = document.getElementById("reset-sent-user-name");
+      const iconDisplay = document.getElementById("reset-sent-icon");
+      const titleDisplay = document.getElementById("reset-sent-title");
+      const bannerDisplay = document.getElementById("reset-sent-status-banner");
+      const statusText = document.getElementById("reset-sent-status-text");
+      const emailActions = document.getElementById("reset-sent-email-actions");
+      const fallbackActions = document.getElementById("reset-fallback-actions");
 
-    // Alternar para Etapa 2
-    const stepRequest = document.getElementById("reset-step-request");
-    const stepSent = document.getElementById("reset-step-sent");
-    const stepNewPass = document.getElementById("reset-step-newpass");
-    if (stepRequest) stepRequest.style.display = "none";
-    if (stepSent) stepSent.style.display = "block";
-    if (stepNewPass) stepNewPass.style.display = "none";
+      if (emailDisplay) emailDisplay.textContent = result.email || result.maskedEmail;
+      if (userNameDisplay) userNameDisplay.textContent = `Colaborador: ${result.user.nome} • Matrícula: ${result.user.matricula || '-'} • Login: ${result.user.username}`;
 
-    showToast(`✉️ Link de redefinição encaminhado para ${result.email}!`);
-  } else {
+      if (result.emailSent) {
+        if (iconDisplay) iconDisplay.textContent = "✉️";
+        if (titleDisplay) titleDisplay.textContent = "Link Enviado para o E-mail Cadastrado!";
+        if (bannerDisplay) {
+          bannerDisplay.style.background = "rgba(16, 185, 129, 0.12)";
+          bannerDisplay.style.borderColor = "rgba(16, 185, 129, 0.4)";
+        }
+        if (statusText) {
+          statusText.innerHTML = `As instruções e o link seguro de acesso foram direcionados <strong>exclusivamente para a caixa de entrada</strong> do seu e-mail corporativo cadastrado (${result.email}).`;
+        }
+        const previewBtn = document.getElementById("btn-open-preview-link");
+        if (previewBtn) {
+          if (result.previewUrl) {
+            previewBtn.href = result.previewUrl;
+            previewBtn.style.display = "flex";
+          } else {
+            previewBtn.style.display = "none";
+          }
+        }
+        if (emailActions) emailActions.style.display = "flex";
+        if (fallbackActions) fallbackActions.style.display = "none";
+        showToast(`✉️ Link enviado com sucesso para ${result.email}!`);
+      } else {
+        if (iconDisplay) iconDisplay.textContent = "⚠️";
+        if (titleDisplay) titleDisplay.textContent = "Envio SMTP Pendente de Senha no .env";
+        if (bannerDisplay) {
+          bannerDisplay.style.background = "rgba(245, 158, 11, 0.15)";
+          bannerDisplay.style.borderColor = "rgba(245, 158, 11, 0.4)";
+        }
+        if (statusText) {
+          statusText.innerHTML = `O token foi gerado no Neon, mas o e-mail não pôde ser transmitido pela internet porque o campo <code>SMTP_PASS</code> no arquivo <code>.env</code> está vazio. Você pode redefinir agora no botão abaixo ou preencher sua senha no <code>.env</code>.`;
+        }
+        if (emailActions) emailActions.style.display = "none";
+        if (fallbackActions) fallbackActions.style.display = "flex";
+        showToast(`⚠️ Token gerado no Neon (SMTP_PASS pendente no .env)`);
+      }
+
+      // Alternar para Etapa 2
+      const stepRequest = document.getElementById("reset-step-request");
+      const stepSent = document.getElementById("reset-step-sent");
+      const stepNewPass = document.getElementById("reset-step-newpass");
+      if (stepRequest) stepRequest.style.display = "none";
+      if (stepSent) stepSent.style.display = "block";
+      if (stepNewPass) stepNewPass.style.display = "none";
+    } else {
+      if (errorAlert) {
+        errorAlert.textContent = `⚠️ ${result.message || "Erro ao solicitar redefinição."}`;
+        errorAlert.style.display = "block";
+      }
+    }
+  } catch (err) {
     if (errorAlert) {
-      errorAlert.textContent = `⚠️ ${result.message || "Erro ao solicitar redefinição."}`;
+      errorAlert.textContent = `⚠️ Erro de conexão ao solicitar token: ${err.message}`;
       errorAlert.style.display = "block";
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = "<span>⚡ Gerar Token & Solicitar Link</span>";
     }
   }
 }
@@ -3218,8 +3278,9 @@ function handleCopyResetLinkClick() {
   }
 }
 
-function openResetPasswordTokenModal(token, preloadedUser = null) {
-  const result = AuthManager.validateResetToken(token);
+async function openResetPasswordTokenModal(token, preloadedUser = null) {
+  showToast("🔍 Validando token no Neon PostgreSQL...");
+  const result = await AuthManager.validateResetToken(token);
   if (!result.success) {
     showToast(`⚠️ ${result.message || "Link inválido ou expirado."}`);
     openResetPasswordModal(false);
@@ -3313,37 +3374,55 @@ function updateResetPasswordStrengthUI() {
   }
 }
 
-function handleResetPasswordSubmit(e) {
+async function handleResetPasswordSubmit(e) {
   e.preventDefault();
   const token = document.getElementById("input-reset-token")?.value || currentResetTokenActive;
   const newPass = document.getElementById("input-reset-new-pass")?.value;
   const confirmPass = document.getElementById("input-reset-confirm-pass")?.value;
   const errorAlert = document.getElementById("reset-password-error");
+  const submitBtn = e.target.querySelector("button[type='submit']");
 
-  const result = AuthManager.resetPasswordWithToken(token, newPass, confirmPass);
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = "<span>⏳ Atualizando no Neon PostgreSQL...</span>";
+  }
 
-  if (result.success) {
-    if (errorAlert) errorAlert.style.display = "none";
-    currentResetTokenActive = "";
-    try {
-      if (typeof window !== "undefined" && window.history && window.history.replaceState) {
-        window.history.replaceState({}, document.title, window.location.pathname);
+  try {
+    const result = await AuthManager.resetPasswordWithToken(token, newPass, confirmPass);
+
+    if (result.success) {
+      if (errorAlert) errorAlert.style.display = "none";
+      currentResetTokenActive = "";
+      try {
+        if (typeof window !== "undefined" && window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch (err) {}
+      closeResetPasswordModal();
+      showToast(`🎉 ${result.message || "Senha redefinida com sucesso no Neon!"}`);
+
+      if (!isResetPasswordLoggedInMode) {
+        // Preenche os campos do formulário de login prontos para autenticação
+        const loginUser = document.getElementById("input-auth-username");
+        const loginPass = document.getElementById("input-auth-password");
+        if (loginUser && result.user?.username) loginUser.value = result.user.username;
+        if (loginPass) loginPass.value = newPass;
       }
-    } catch (err) {}
-    closeResetPasswordModal();
-    showToast(`🎉 ${result.message || "Senha redefinida com sucesso!"}`);
-
-    if (!isResetPasswordLoggedInMode) {
-      // Preenche os campos do formulário de login prontos para autenticação
-      const loginUser = document.getElementById("input-auth-username");
-      const loginPass = document.getElementById("input-auth-password");
-      if (loginUser && result.user?.username) loginUser.value = result.user.username;
-      if (loginPass) loginPass.value = newPass;
+    } else {
+      if (errorAlert) {
+        errorAlert.textContent = `⚠️ ${result.message || "Erro ao redefinir a senha."}`;
+        errorAlert.style.display = "block";
+      }
     }
-  } else {
+  } catch (err) {
     if (errorAlert) {
-      errorAlert.textContent = `⚠️ ${result.message || "Erro ao redefinir a senha."}`;
+      errorAlert.textContent = `⚠️ Erro ao atualizar no Neon: ${err.message}`;
       errorAlert.style.display = "block";
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = "<span>💾 Salvar Nova Senha no Neon</span>";
     }
   }
 }
@@ -3706,9 +3785,9 @@ function closeUploadUsersModal() {
 function downloadSampleUsersTemplateCSV() {
   const headers = ["Matrícula", "Nome Completo", "Cargo", "E-mail", "Perfil", "Nível", "Setor", "Filial"];
   const sampleRows = [
-    ["10210", "Carlos Silva", "Técnico de Manutenção - Setor 2", "carlos.silva@operacao365.com", "TECNICO", "G2", "Setor 2", "5003 / 5070"],
-    ["10211", "Mariana Santos", "Supervisora de Operações", "mariana.santos@operacao365.com", "MASTER", "Supervisão", "Zona 2 - Norte", "5003 / 5070"],
-    ["10212", "Felipe Andrade", "Técnico Especialista - Volante", "felipe.andrade@operacao365.com", "TECNICO", "G3", "Volante / Corretivo", "5003 / 5070"]
+    ["10210", "Carlos Silva", "Técnico de Manutenção - Setor 2", "carlos.silva@tkelevator.com", "TECNICO", "G2", "Setor 2", "5003 / 5070"],
+    ["10211", "Mariana Santos", "Supervisora de Operações", "mariana.santos@tkelevator.com", "MASTER", "Supervisão", "Zona 2 - Norte", "5003 / 5070"],
+    ["10212", "Felipe Andrade", "Técnico Especialista - Volante", "felipe.andrade@tkelevator.com", "TECNICO", "G3", "Volante / Corretivo", "5003 / 5070"]
   ];
 
   const csvContent = "\uFEFF" + [headers.join(";"), ...sampleRows.map(r => r.join(";"))].join("\r\n");

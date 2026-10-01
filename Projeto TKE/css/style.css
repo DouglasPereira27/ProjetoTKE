@@ -4003,3 +4003,97 @@ textarea.form-control {
   border-color: #e2e8f0;
 }
 
+/* ==========================================================================
+   ESTILOS: FLUXO DE PRIMEIRO ACESSO E REDEFINIÇÃO DE SENHA COM TOKEN NEON
+   ========================================================================== */
+.modal-auth-flow-content {
+  max-width: 480px;
+  width: 95%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .form-control {
+  padding-right: 40px;
+}
+
+.btn-toggle-pass {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-toggle-pass:hover {
+  color: var(--accent-cyan);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.password-rules-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  transition: color 0.2s ease;
+}
+
+.rule-item.valid {
+  color: var(--accent-emerald, #10b981);
+}
+
+.rule-item.invalid {
+  color: var(--text-muted, #94a3b8);
+}
+
+.rule-icon {
+  font-size: 12px;
+}
+
+.auth-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.btn-link-subtle {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.btn-link-subtle:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
